@@ -1,2 +1,2 @@
 # Transword
- A Discord bot specialized in translating foreign languages.
+An entirely rich-source Discord Bot specializing in foreign language translation.
