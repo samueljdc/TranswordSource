@@ -12,11 +12,11 @@ class Transword:
         # Define the bot variables
         self.bot = commands.Bot(
             intents = Intents.all(),
-            command_prefix = "!",
+            command_prefix = "/",
             help_command = None
         )
         self.cogs = ["SlashAPI"]
-        
+
         # Load the cogs.
         self.load_cogs()
 
