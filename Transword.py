@@ -15,7 +15,7 @@ class Transword:
             command_prefix = "/",
             help_command = None
         )
-        self.cogs = ["SlashAPI"]
+        self.cogs = []
 
         # Load the cogs.
         self.load_cogs()
@@ -26,8 +26,17 @@ class Transword:
         # Check for the directory itself.
         if __name__ == "__main__":
             for cog in self.cogs:
-                print(f"[MAIN] cogs.{cog} loaded.")
-                self.bot.load_extension(f"cogs.{cog}")
+                print(f"[MAIN] Cog {cog} has been loaded.")
+
+                cog_type = ""
+                if "API" in cog:
+                    cog_type = "cogs.api"
+                elif "Comm" in cog:
+                    cog_type = "cogs.commands"
+                else:
+                    pass
+
+                self.bot.load_extension(f"{cog_type}.{cog}")
         else:
             pass
 

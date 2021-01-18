@@ -4,45 +4,34 @@ from discord.ext import commands
 from discord_slash import SlashCommand
 from discord_slash.utils import manage_commands
 
-class SlashAPI(commands.Cog):
+class SlashAPI:
     """ API for handling all of the slash command utilization. """
 
-    def __init__(self, bot):
-        # Makes slash commands existent if not set.
-        if not hasattr(bot, "slash"):
-            bot.slash = SlashCommand(
-                bot,
-                override_type = True,
-                auto_register = True,
-                auto_delete = True
-            )
+    def __init__(self):
+        # Define some details of the bot.
+        self.details = {
+            "token": open(".TOKEN", "r").read(),
+            "id": self.bot.id
+        }
 
-        self.bot = bot
-        self.bot.slash.get_cog_commands(self)
-
-    def cog_unload(self):
-        """ Removes the original cog context from d.py. """
-
-        self.bot.slash.remove_cog_commands(self)
-
-    async def remove(self, guild_id: int, cmd_id: int):
+    async def remove(self, **ids):
         """ Removes a slash command from the Bot API. """
 
         try:
             # Assume global if no guild ID.
             if guild_id == None:
                 self.request = await manage_commands.remove_slash_command(
-                    self.bot.id,
-                    open(".TOKEN", "r").read(),
+                    self.details["id"],
+                    self.details["token"],
                     None,
-                    cmd_id
+                    ids["cmd_id"]
                 )
             else:
                 self.request = await manage_commands.remove_slash_command(
-                    self.bot.id,
-                    open(".TOKEN", "r").read(),
-                    guild_id,
-                    cmd_id
+                    self.details["id"],
+                    self.details["token"],
+                    ids["guild_id"],
+                    ids["cmd_id"]
                 )
         except error.RaiseError as exception:
             # Return the error if it fails.
@@ -50,9 +39,12 @@ class SlashAPI(commands.Cog):
 
         # Check to see if the request worked.
         if self.request == 204:
-            print(f"[SLASHAPI] Deletion of {cmd_id} was successful.")
+            print(f"[SLASHAPI] Deletion of {ids['cmd_id']} was successful.")
         else:
             pass
+
+        # Pass off request information
+        return self.request
 
     async def get(self, guild_id: int):
         """ Get all of the slash commands from the Bot API. """
@@ -61,14 +53,14 @@ class SlashAPI(commands.Cog):
             # If we're getting global commands.
             if guild_id == None:
                 self.request = await manage_commands.get_all_commands(
-                    self.bot.id,
-                    open(".TOKEN", "r").read(),
+                    self.details["id"],
+                    self.details["token"],
                     None
                 )
             else:
                 self.request = await manage_commands.get_all_commands(
-                    self.bot.id,
-                    open(".TOKEN", "r").read(),
+                    self.details["id"],
+                    self.details["token"],
                     guild_id
                 )
         except error.RaiseError as exception:
@@ -82,5 +74,5 @@ class SlashAPI(commands.Cog):
             amount = len(self.request)
             print(f"[SLASHAPI] Command IDs found with {amount} entries.")
 
-def setup(bot):
-    bot.add_cog(SlashAPI(bot))
+        # Pass off request information
+        return self.request
