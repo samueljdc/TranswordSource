@@ -2,7 +2,7 @@
 import requests
 
 # Imports additional libraries required.
-from typing import List
+from typing import List, Union
 
 class DeepLError(Exception):
     """ Allows raising of different DeepL API errors. """
@@ -42,7 +42,7 @@ class DeepLAPI:
                        "PT-PT", "PT-BR", "PT", "RU", "ZH"]
         }
 
-    def parse_error(self, error: int):
+    def parse_error(self, error: Union[str, int]):
         """ Passes off an error type from the list. """
 
         raise DeepLError(error)
