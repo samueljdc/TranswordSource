@@ -14,8 +14,15 @@ class SlashAPI:
             "id": self.bot.id
         }
 
-    async def remove(self, **ids):
+    async def remove(self, **kwargs):
         """ Removes a slash command from the Bot API. """
+
+        """
+            .remove(
+                guild_id = 1234567890,
+                cmd_id = 1234567890
+            )
+        """
 
         try:
             # Assume global if no guild ID.
@@ -24,14 +31,14 @@ class SlashAPI:
                     self.details["id"],
                     self.details["token"],
                     None,
-                    ids["cmd_id"]
+                    kwargs["cmd_id"]
                 )
             else:
                 self.request = await manage_commands.remove_slash_command(
                     self.details["id"],
                     self.details["token"],
-                    ids["guild_id"],
-                    ids["cmd_id"]
+                    kwargs["guild_id"],
+                    kwargs["cmd_id"]
                 )
         except error.RaiseError as exception:
             # Return the error if it fails.
@@ -39,15 +46,19 @@ class SlashAPI:
 
         # Check to see if the request worked.
         if self.request == 204:
-            print(f"[SLASHAPI] Deletion of {ids['cmd_id']} was successful.")
+            print(f"[SLASHAPI] Deletion of {kwargs['cmd_id']} was successful.")
         else:
             pass
 
         # Pass off request information
         return self.request
 
-    async def get(self, guild_id: int):
+    async def get(self, **kwarg):
         """ Get all of the slash commands from the Bot API. """
+
+        """
+            .get(guild_id = 1234567890)
+        """
 
         try:
             # If we're getting global commands.
@@ -61,7 +72,7 @@ class SlashAPI:
                 self.request = await manage_commands.get_all_commands(
                     self.details["id"],
                     self.details["token"],
-                    guild_id
+                    kwarg["guild_id"]
                 )
         except error.RaiseError as exception:
             # Return the error if it fails.

@@ -31,7 +31,7 @@ class DeepLAPI:
         self.headers = {
             "User-Agent": "YourApp",
             "Accept": "*/*",
-            "Content-Length": 54,
+            "Content-Length": 54, # what does this do? doesn't appear int-bsaed on char.
             "Content-Type": "application/x-www-form-urlencoded"
         }
 

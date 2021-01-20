@@ -29,9 +29,7 @@ class Transword:
                 print(f"[MAIN] Cog {cog} has been loaded.")
 
                 cog_type = ""
-                if "API" in cog:
-                    cog_type = "cogs.api"
-                elif "Comm" in cog:
+                if "Comm" in cog:
                     cog_type = "cogs.commands"
                 else:
                     pass
