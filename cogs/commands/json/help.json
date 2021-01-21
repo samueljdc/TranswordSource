@@ -1,0 +1,43 @@
+{
+  "decorator": {
+    "name": "help",
+    "description": "Returns an embed showing the bot's commands.",
+    "guild_ids": [799685484313968670],
+    "options": [
+      {
+        "name": "name",
+        "description": "Search for information about a specific command.",
+        "type": 3,
+        "required": "False"
+      }
+    ]
+  },
+  "embed": {
+    "title": "Help",
+    "color": 7506394,
+    "thumbnail": {
+      "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+    },
+    "fields": [
+      {
+        "name": "Utilities",
+        "value": "**/help** [name]?",
+        "inline": "True"
+      },
+      {
+        "name": "Translation",
+        "value": "**/translate** [target] [text]\n**/transauto** #[channel] [target]",
+        "inline": "True"
+      },
+      {
+        "name": "Coming Soon",
+        "value": "We'll inform you about new commands coming soon here when they're being considered!",
+        "inline": "True"
+      }
+    ],
+    "footer": {
+      "text": "This bot utilizes the DeepL API!",
+      "icon_url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+    }
+  }
+}

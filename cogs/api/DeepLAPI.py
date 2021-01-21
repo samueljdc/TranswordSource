@@ -52,6 +52,7 @@ class DeepLAPI:
                         text: str,
                         target: str,
                         **types):
+
         """ Translates one query/line of text to the specified language. """
 
         try:
@@ -64,6 +65,7 @@ class DeepLAPI:
                         text: List[str],
                         target: str,
                         **types):
+                        
         """ Translates large volumes/queries of text to the specified language. """
 
         try:

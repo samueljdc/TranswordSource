@@ -49,8 +49,8 @@ class SlashAPI(commands.Cog):
 
         raise SlashError(error)
 
-    def read(self,
-             file: str):
+    def read(file: str,
+             self = None):
 
         """
             Return information from a .JSON file.
@@ -59,6 +59,8 @@ class SlashAPI(commands.Cog):
         """
 
         json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
+
+        print(f"[SLASHAPI] Successfully read command \"{file}\" JSON contents.")
         return json
 
     async def remove(self,
@@ -170,6 +172,8 @@ class SlashAPI(commands.Cog):
 
         # Pass off request information
         return self.request
+
+    # TODO: Find a way to create a modify function for the API that won't result in data loss/corruption for the JSON.
 
 def setup(bot):
     bot.add_cog(SlashAPI(bot))

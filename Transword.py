@@ -28,13 +28,15 @@ class Transword:
             for cog in self.cogs:
                 cog_type = ""
 
+                # TODO: Look into better method of checking cogs, maybe by dir?
+
                 if "API" in cog:
                     cog_type = "cogs.api"
                 else:
                     cog_type = "cogs.commands"
 
-                print(f"[MAIN] Command {cog} has been loaded.")
                 self.bot.load_extension(f"{cog_type}.{cog}")
+                print(f"[MAIN] Command {cog} has been loaded.")
         else:
             pass
 
@@ -55,7 +57,7 @@ async def on_ready():
 
     print(f"[MAIN] The bot is now online, passing details...")
     print(f"... Started: {time}")
-    print("".join("=" for i in range(20)))
+    print("".join("=" for i in range(60))) # TODO: Re-write in more organized manner, very messy approach.
 
 
 transword.bot.run(
