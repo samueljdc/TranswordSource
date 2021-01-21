@@ -17,7 +17,7 @@ class DeepLError(Exception):
             429: "Too many requests. Please wait and resend your request.",
             456: "Quota exceeded. The character limit has been reached.",
             503: "Resource currently unavailable. Try again later.",
-            "5**": "Internal error"
+            "5xx": "Internal error"
         }
 
         return self.errors[error]
@@ -47,7 +47,11 @@ class DeepLAPI:
 
         raise DeepLError(error)
 
-    def translate_small(self, text: str, target: str, **types):
+    def translate_small(self,
+                        *,
+                        text: str,
+                        target: str,
+                        **types):
         """ Translates one query/line of text to the specified language. """
 
         try:
@@ -55,7 +59,11 @@ class DeepLAPI:
         except DeepLError as error:
             self.parse_error(error)
 
-    def translate_large(self, text: List[str], target: str, **types):
+    def translate_large(self,
+                        *,
+                        text: List[str],
+                        target: str,
+                        **types):
         """ Translates large volumes/queries of text to the specified language. """
 
         try:
