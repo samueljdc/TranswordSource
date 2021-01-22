@@ -45,7 +45,7 @@ class Utils(commands.Cog):
     #
     #     get_event_loop().run_until_complete(
     #         DAPI.translate(
-    #             text = "Hello World!",
+    #             text = "Hello World.",
     #             target = "DE"
     #         )
     #     )

@@ -66,9 +66,16 @@ class DeepLAPI:
             Translates one query/line of text to the specified language.
 
             .translate(
-                text = ["Hello World.", "I allow multiple lines too!"],
+                text = [
+                    "Hello World.",
+                    "I allow multiple lines too!"
+                ],
                 target = "DE",
-                types = [["source_lang", "EN"], ["split_sentences", "0"]]
+                types = [
+                    ["source_lang", "EN"],
+                    ["split_sentences", "0"],
+                    ["formality", "less"]
+                ]
             )
         """
 
