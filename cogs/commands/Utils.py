@@ -4,11 +4,14 @@ from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
 from discord_slash.utils.manage_commands import create_option
-from ..api.SlashAPI import SlashAPI as API, SlashError as Error
-# from ..api.SlashAPI import SlashError as Error
+from ..api.SlashAPI import SlashAPI as SAPI, SlashError as SError
+# from ..api.DeepLAPI import DeepLAPI as DAPI, DeepLError as DError
 
 # Imports additional libraries used.
 from json import dumps
+
+# TODO: Move this to a translator cog. This is how we'll control running translation through API script.
+# from asyncio import get_event_loop, run_until_complete
 
 class Utils(commands.Cog):
     """ A cog handling all utility commands for the Bot. """
@@ -26,17 +29,11 @@ class Utils(commands.Cog):
         self.bot = bot
         self.bot.slash.get_cog_commands(self)
 
-        self.create_commands()
-
-    def create_commands(self):
-        """ Creates new commands that will be used for this cog. """
-
-        pass
-
     def cog_unload(self):
         self.bot.slash.remove_cog_commands(self)
 
     # TODO: Deprecate testing source once this cog is complete.
+    # TODO: Figure out a more organized approach for the asyncio method to run DeepL API functions.
     # @cog_slash(**API.read("test"))
     # async def _test(self, ctx: SlashContext, paramone: str, paramtwo: str):
     #     """ Just a testing command. """
@@ -45,21 +42,26 @@ class Utils(commands.Cog):
     #         content = f"Parameter one: {paramone}\nParameter two: {paramtwo}",
     #         send_type = 3
     #     )
+    #
+    #     get_event_loop().run_until_complete(
+    #         DAPI.translate(
+    #             text = "Hello World!",
+    #             target = "DE"
+    #         )
+    #     )
 
-    @cog_slash(**API.read("help")["decorator"])
+    @cog_slash(**SAPI.read("help")["decorator"])
     async def _help(self, ctx: SlashContext, name: str = None):
         """ Returns an embed showing the bot's commands. """
 
         # Check if the name field is empty or not.
         try:
             if name in ["", None]:
-                embed = discord.Embed.from_dict(API.read("help")["embed"])
+                embed = discord.Embed.from_dict(SAPI.read("help")["embed"])
                 await ctx.send(embeds = [embed])
             else:
                 await ctx.send(content = "Sorry, but we can't support searching specific command names yet!")
-        except Error:
-            # Return the error if it fails.
-            exception = API.parse_error(400)
+        except SError as exception:
             print(f"[UTILS] {exception}")
 
 def setup(bot):

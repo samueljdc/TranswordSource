@@ -42,13 +42,6 @@ class SlashAPI(commands.Cog):
             "id": 799697654279307314
         }
 
-    def parse_error(self,
-                    error: Union[str, int]):
-
-        """ Passes off an error type from the list. """
-
-        raise SlashError(error)
-
     def read(file: str,
              self = None):
 
@@ -144,23 +137,27 @@ class SlashAPI(commands.Cog):
         """
 
         try:
-            # Let's make sure it doesn't exist.
-            if cmd_name == self.get(guild_id)["name"]:
-                self.parse_error(4005)
-            else:
-                # Make the HTTP request to add a command.
-                self.request = await add_slash_command(
-                    self.details["id"],
-                    self.details["token"],
-                    guild_id,
-                    cmd_name,
-                    description,
-                    options
-                )
+            try:
+                # Let's make sure it doesn't exist.
+                if cmd_name == self.get(guild_id)["name"]:
+                    raise SlashError(4005)
+                else:
+                    # Make the HTTP request to add a command.
+                    self.request = await add_slash_command(
+                        self.details["id"],
+                        self.details["token"],
+                        guild_id,
+                        cmd_name,
+                        description,
+                        options
+                    )
 
-                # Write a new command JSON entry with the request response
-                TinyDB(f"commands/json/{cmd_name}.json").insert(self.request)
-        except error.RequestFailure as exception:
+                    # Write a new command JSON entry with the request response
+                    TinyDB(f"commands/json/{cmd_name}.json").insert(self.request)
+            except error.RequestFailure as exception:
+                # Return the error if it fails.
+                print(f"[SLASHAPI] {exception}")
+        except SlashError as exception:
             # Return the error if it fails.
             print(f"[SLASHAPI] {exception}")
 

@@ -26,14 +26,7 @@ class Transword:
         # Check for the directory itself.
         if __name__ == "__main__":
             for cog in self.cogs:
-                cog_type = ""
-
-                # TODO: Look into better method of checking cogs, maybe by dir?
-
-                if "API" in cog:
-                    cog_type = "cogs.api"
-                else:
-                    cog_type = "cogs.commands"
+                cog_type = "cogs.api" if "API" in cog else "cogs.commands"
 
                 self.bot.load_extension(f"{cog_type}.{cog}")
                 print(f"[MAIN] Command {cog} has been loaded.")
@@ -49,11 +42,6 @@ async def on_ready():
 
     # Some internal information variables being passed.
     time = datetime.now().strftime("%b %d %Y %H:%M:%S")
-
-    # Put in a bot custom status.
-    await transword.bot.change_presence(
-        activity = CustomActivity("/help for commands.")
-    )
 
     print(f"[MAIN] The bot is now online, passing details...")
     print(f"... Started: {time}")
