@@ -17,7 +17,6 @@ class Transword:
         )
         self.cogs = ["Utils", "SlashAPI"]
 
-        # Load the cogs.
         self.load_cogs()
 
     def load_cogs(self):

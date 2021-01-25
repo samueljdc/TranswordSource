@@ -35,21 +35,20 @@ class Utils(commands.Cog):
 
     # TODO: Deprecate testing source once this cog is complete.
     # TODO: Figure out a more organized approach for the asyncio method to run DeepL API functions.
-    # @cog_slash(**API.read("test"))
-    # async def _test(self, ctx: SlashContext, paramone: str, paramtwo: str):
-    #     """ Just a testing command. """
+    # @cog_slash(**SAPI.read("translate")["decorator"])
+    # async def _translate(self, ctx: SlashContext, target: str, *, text: str):
+    #     """ Translates text from a foreign language into another one specified. """
     #
-    #     await ctx.send(
-    #         content = f"Parameter one: {paramone}\nParameter two: {paramtwo}",
-    #         send_type = 3
-    #     )
-    #
-    #     get_event_loop().run_until_complete(
+    #     # Run the DeepL API to translate for us.
+    #     information = get_event_loop().run_until_complete(
     #         DAPI.translate(
-    #             text = "Hello World.",
-    #             target = "DE"
+    #             text = text,
+    #             target = target
     #         )
     #     )
+    #
+    #     embed = discord.Embed.from_dict(SAPI.read("translate")["embed"])
+    #     await ctx.send(embeds = [embed])
 
     @cog_slash(**SAPI.read("help")["decorator"])
     async def _help(self, ctx: SlashContext, name: str = None):

@@ -31,7 +31,9 @@ class ScriptError(APIFailure):
 
             # DeepLAPI
             1001: "No text was provided for the API to translate.",
-            1002: "The target language specified does not exist."
+            1002: "The target language specified does not exist.",
+            1003: "The source language specified does not exist.",
+            1004: "The given optional parameter was not found in the API."
         }
 
         super().__init__(self.errors[error])

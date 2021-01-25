@@ -12,18 +12,28 @@ class DeepLAPI:
 
     def __init__(self, auth):
         # Declare HTTP information variables.
-        self.HTTP = f"https://api.depl.com/v2/translate?auth_key={auth}"
+        self.HTTP = f"https://api.deepl.com/v2/translate?auth_key={auth}"
         self.headers = {
             "User-Agent": "YourApp",
             "Accept": "*/*",
             "Content-Type": "application/x-www-form-urlencoded"
         }
 
-        # Define the languages we can translate/read.
-        self.languages = {
-            "source": ["DE", "EN", "FR", "IT", "JA", "ES", "NL", "PL", "PT", "RU", "ZH"],
-            "target": ["DE", "EN-GB", "EN-US", "EN", "FR", "IT", "JA", "ES", "NL", "PL",
-                       "PT-PT", "PT-BR", "PT", "RU", "ZH"]
+        # Specify all target languages accessible.
+        self.target = ["DE", "EN-GB", "EN-US",
+                       "EN", "FR", "IT", "JA",
+                       "ES", "NL", "PL", "PT-PT",
+                       "PT-BR", "PT", "RU", "ZH"]
+
+        # Define the options that can exist for translations.
+        self.options = {
+            "source_lang": ["DE", "EN", "FR",
+                            "IT", "JA", "ES",
+                            "NL", "PL", "PT",
+                            "RU", "ZH"],
+            "split_sentences": ["0", "1", "nonewlines"],
+            "preserve_formatting": ["0", "1"],
+            "formality": ["default", "more", "less"]
         }
 
     async def translate(self,
@@ -50,33 +60,50 @@ class DeepLAPI:
         """
 
         try:
-            # Check if any of our target language won't work.
-            if target == "":
-                raise ScriptError(1000)
-            elif target not in self.languages:
+            # Check if any of our arguments are void.
+            if text in [[], ""]:
                 raise ScriptError(1001)
+            if target not in self.target:
+                raise ScriptError(1002)
 
             # Ensure HTTP request is safefully encoded.
-            queries = "&text=".join(query) if isinstance(text, list) else text
+            queries = text
+
+            if isinstance(text, list):
+                if len(text) <= 50:
+                    queries = "&text=".join(query)
+                else:
+                    raise HTTPError(413)
+
             queries = queries.encode("utf-8")
 
-            # Also look for any options to pass through, as well as the request details.
-            options = "".join(f"&{opt[0]}={opt[1]}" for opt in types) if types != "" else ""
+            # Do some format checks if options do exist.
+            if types != "":
+                options = "".join(f"&{opt[0]}={opt[1]}" for opt in types)
+
+                for opt in types:
+                    if opt[0] not in self.options:
+                        raise ScriptError(1003)
+                    elif opt[0] == "formality":
+                        # If formality is on but language is in the exception list.
+                        if target in ["EN", "EN-GB", "EN-US",
+                                      "ES", "JA", "ZH"]:
+                            raise HTTPError(503)
+                    else:
+                        if opt[1] not in self.options[opt]:
+                            raise ScriptError(1004)
+
+            # Encode the URI path to be ready for request sending.
             encoded_url = requote_uri(f"{self.HTTP}{queries}&target_lang={target}{options}> HTTP/1.0")
             self.headers["Content-Length"] = getsizeof(queries)
 
-            # Establish asynchronous connection to API.
+            # Establish asynchronous connection to API and determine states.
             async with ClientSession(headers = self.headers) as session:
-                # Check for any errors or fails.
                 async with session.get(url = encoded_url) as error:
-                    # Give us back the API's response with the status.
                     if self.parse_error(error.status):
                         raise HTTPError(code = resp, details = json(error)["message"])
-
-                # Send the HTTP request off to the API.
                 async with session.post(url = encoded_url) as data:
                     return json(data)["translations"][0]
-
         except ScriptError as exception:
             print(f"[DEEPLAPI] {exception}")
 

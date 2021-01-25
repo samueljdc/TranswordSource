@@ -22,7 +22,7 @@ class SlashAPI(commands.Cog):
         }
 
     def read(file: str,
-             self = None):
+             self = None) -> list:
 
         """
             Return information from a .JSON file.
@@ -33,15 +33,15 @@ class SlashAPI(commands.Cog):
         if file == "":
             raise ScriptError(1000)
         else:
-            json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
-
             print(f"[SLASHAPI] Successfully read command \"{file}\" JSON contents.")
+
+            json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
             return json
 
     async def remove(self,
                      *,
                      guild_id: int = None,
-                     cmd_id: int = None):
+                     cmd_id: int = None) -> int:
 
         """
             Removes a slash command from the Bot API.
@@ -60,17 +60,14 @@ class SlashAPI(commands.Cog):
                 cmd_id
             )
         except error.RequestFailure as exception:
-            # Return the error if it fails.
             print(f"[SLASHAPI] {exception}")
 
-        # Check to see if the request worked.
         if self.request == 204:
             print(f"[SLASHAPI] Deletion of {cmd_id} was successful.")
 
-        # Pass off request information
         return self.request
 
-    async def get(self, guild_id: int = None):
+    async def get(self, guild_id: int = None) -> list:
 
         """
             Get all of the slash commands from the Bot API.
@@ -79,24 +76,20 @@ class SlashAPI(commands.Cog):
         """
 
         try:
-            # Make the HTTP request to get all of the commands.
             self.request = await get_all_commands(
                 self.details["id"],
                 self.details["token"],
                 guild_id
             )
         except error.RequestFailure as exception:
-            # Return the error if it fails.
             print(f"[SLASHAPI] {exception}")
 
-        # Check if the list is empty
         if self.request == []:
             print("[SLASHAPI] Command IDs found as empty.")
         else:
             amount = len(self.request)
             print(f"[SLASHAPI] Command IDs found with {amount} entries.")
 
-        # Pass off request information
         return self.request
 
     async def create(self,
@@ -104,7 +97,7 @@ class SlashAPI(commands.Cog):
                      guild_id: int = None,
                      cmd_name: str = "",
                      description: str = "",
-                     options: list = None):
+                     options: list = None) -> list:
 
         """
             Creates a slash command from the Bot API.
@@ -118,11 +111,9 @@ class SlashAPI(commands.Cog):
 
         try:
             try:
-                # Let's make sure it doesn't exist.
                 if cmd_name == self.get(guild_id)["name"]:
                     raise GatewayError(4005)
                 else:
-                    # Make the HTTP request to add a command.
                     self.request = await add_slash_command(
                         self.details["id"],
                         self.details["token"],
@@ -135,17 +126,13 @@ class SlashAPI(commands.Cog):
                     # Write a new command JSON entry with the request response
                     TinyDB(f"commands/json/{cmd_name}.json").insert(self.request)
             except error.RequestFailure as exception:
-                # Return the error if it fails.
                 print(f"[SLASHAPI] {exception}")
-        except SlashError as exception:
-            # Return the error if it fails.
+        except GatewayError as exception:
             print(f"[SLASHAPI] {exception}")
 
-        # Check for if the request passed or not.
         if self.request not in [[], None]:
             print(f"[SLASHAPI] New slash command \"{cmd_name}\" successfully created.")
 
-        # Pass off request information
         return self.request
 
     # TODO: Find a way to create a modify function for the API that won't result in data loss/corruption for the JSON.
