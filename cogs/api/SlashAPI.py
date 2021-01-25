@@ -8,28 +8,7 @@ from discord_slash.utils.manage_commands import remove_slash_command, add_slash_
 from json import loads
 from typing import Union
 from tinydb import TinyDB
-
-class SlashError(Exception):
-    """ Allows raising of different Slash API errors. """
-
-    def __init__(self, error):
-        # Set up a list of all possible API error codes.
-        self.errors = {
-            # JSON Codes
-            400: "The request was improperly formatted, or the server couldn't understand it.",
-            401: "The Authorization header was missing or invalid.",
-            403: "The Authorization token you passed did not have permission to the resource.",
-            404: "The resource at the location specified doesn't exist.",
-            405: "The HTTP method used is not valid for the location specified.",
-            429: "You are being rate limited, see Rate Limits.",
-            502: "There was not a gateway available to process your request. Wait a bit and retry.",
-            "5xx": "The server had an error processing your request.",
-
-            # Gateway Codes
-            4005: "You sent more than one identify payload."
-        }
-
-        return self.errors[error]
+from . import Errors
 
 class SlashAPI(commands.Cog):
     """ API for handling all of the slash command utilization. """
@@ -51,10 +30,13 @@ class SlashAPI(commands.Cog):
             .read("join")
         """
 
-        json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
+        if file == "":
+            raise ScriptError(1000)
+        else:
+            json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
 
-        print(f"[SLASHAPI] Successfully read command \"{file}\" JSON contents.")
-        return json
+            print(f"[SLASHAPI] Successfully read command \"{file}\" JSON contents.")
+            return json
 
     async def remove(self,
                      *,
@@ -84,8 +66,6 @@ class SlashAPI(commands.Cog):
         # Check to see if the request worked.
         if self.request == 204:
             print(f"[SLASHAPI] Deletion of {cmd_id} was successful.")
-        else:
-            pass
 
         # Pass off request information
         return self.request
@@ -140,7 +120,7 @@ class SlashAPI(commands.Cog):
             try:
                 # Let's make sure it doesn't exist.
                 if cmd_name == self.get(guild_id)["name"]:
-                    raise SlashError(4005)
+                    raise GatewayError(4005)
                 else:
                     # Make the HTTP request to add a command.
                     self.request = await add_slash_command(
@@ -162,9 +142,7 @@ class SlashAPI(commands.Cog):
             print(f"[SLASHAPI] {exception}")
 
         # Check for if the request passed or not.
-        if self.request in [[], None]:
-            pass
-        else:
+        if self.request not in [[], None]:
             print(f"[SLASHAPI] New slash command \"{cmd_name}\" successfully created.")
 
         # Pass off request information

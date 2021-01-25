@@ -4,7 +4,8 @@ from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
 from discord_slash.utils.manage_commands import create_option
-from ..api.SlashAPI import SlashAPI as SAPI, SlashError as SError
+from ..api.SlashAPI import SlashAPI as SAPI
+
 # from ..api.DeepLAPI import DeepLAPI as DAPI, DeepLError as DError
 
 # Imports additional libraries used.
@@ -55,14 +56,23 @@ class Utils(commands.Cog):
         """ Returns an embed showing the bot's commands. """
 
         # Check if the name field is empty or not.
-        try:
-            if name in ["", None]:
-                embed = discord.Embed.from_dict(SAPI.read("help")["embed"])
-                await ctx.send(embeds = [embed])
-            else:
-                await ctx.send(content = "Sorry, but we can't support searching specific command names yet!")
-        except SError as exception:
-            print(f"[UTILS] {exception}")
+        if name in ["", None]:
+            embed = discord.Embed.from_dict(SAPI.read("help")["embed"])
+            await ctx.send(embeds = [embed])
+        else:
+            await ctx.send(content = "Sorry, but we can't support searching specific command names yet!")
+
+    @cog_slash(**SAPI.read("ping")["decorator"])
+    async def _ping(self, ctx: SlashContext):
+        """ Returns the bot's latency as milliseconds. """
+
+        # Collect the latency in microseconds, then bring to ms and round up.
+        latency = round(self.bot.latency * 1000)
+
+        await ctx.send(
+            content = f":ping_pong: Pong! Responded at `{latency}` ms.",
+            hidden = True
+        )
 
 def setup(bot):
     bot.add_cog(Utils(bot))
