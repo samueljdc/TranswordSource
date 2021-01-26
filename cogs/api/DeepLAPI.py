@@ -82,6 +82,11 @@ class DeepLAPI:
                 options = "".join(f"&{opt[0]}={opt[1]}" for opt in types)
 
                 for opt in types:
+                    # Have to keep this all str-based!
+                    if not isinstance(opt[0], str):
+                        opt[0] = str(opt[0])
+                    if not isinstance(opt[1], str):
+                        opt[1] = str(opt[1])
                     if opt[0] not in self.options:
                         raise ScriptError(1003)
                     elif opt[0] == "formality":
