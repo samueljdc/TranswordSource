@@ -66,7 +66,5 @@ class HTTPError(APIFailure):
             "5**": "Internal error."
         }
 
-        if code not in self.errors:
-            return False
-        else:
+        if code in self.errors:
             super().__init__(f"{self.errors[error]} Additional details:\n\n{details}")

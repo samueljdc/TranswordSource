@@ -3,10 +3,8 @@ import discord
 from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
-from discord_slash.utils.manage_commands import create_option
 from ..api.SlashAPI import SlashAPI as SAPI
-
-# from ..api.DeepLAPI import DeepLAPI as DAPI, DeepLError as DError
+# from ..api.DeepLAPI import DeepLAPI as DAPI
 
 # Imports additional libraries used.
 from json import dumps

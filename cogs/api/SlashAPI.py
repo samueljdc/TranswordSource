@@ -30,13 +30,13 @@ class SlashAPI(commands.Cog):
             .read("join")
         """
 
-        if file == "":
-            raise ScriptError(1000)
-        else:
+        if file != "":
             print(f"[SLASHAPI] Successfully read command \"{file}\" JSON contents.")
 
             json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
             return json
+        else:
+            raise ScriptError(1000)
 
     async def remove(self,
                      *,
@@ -111,9 +111,7 @@ class SlashAPI(commands.Cog):
 
         try:
             try:
-                if cmd_name == self.get(guild_id)["name"]:
-                    raise GatewayError(4005)
-                else:
+                if cmd_name != self.get(guild_id)["name"]:
                     self.request = await add_slash_command(
                         self.details["id"],
                         self.details["token"],
@@ -123,8 +121,10 @@ class SlashAPI(commands.Cog):
                         options
                     )
 
-                    # Write a new command JSON entry with the request response
+                    # Write a new command JSON entry with the request response.
                     TinyDB(f"commands/json/{cmd_name}.json").insert(self.request)
+                else:
+                    raise GatewayError(4005)
             except error.RequestFailure as exception:
                 print(f"[SLASHAPI] {exception}")
         except GatewayError as exception:

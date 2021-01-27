@@ -4,7 +4,8 @@ from sys import getsizeof
 from typing import Union
 from requests.utils import requote_uri
 from asyncio import sleep
-from aiohttp import ClientSession, web.json_response as json
+from aiohttp import ClientSession
+from aiohttp.web import json_response as json
 from . import Errors
 
 class DeepLAPI:
@@ -35,6 +36,8 @@ class DeepLAPI:
             "preserve_formatting": ["0", "1"],
             "formality": ["default", "more", "less"]
         }
+
+        print("[DEEPLAPI] The DeepL API has been activated.")
 
     async def translate(self,
                         *,
@@ -101,6 +104,8 @@ class DeepLAPI:
             # Encode the URI path to be ready for request sending.
             encoded_url = requote_uri(f"{self.HTTP}{queries}&target_lang={target}{options}> HTTP/1.0")
             self.headers["Content-Length"] = getsizeof(queries)
+            # for some reason, DeepL want you to send over KB information so they can upcharge
+            # for this as well as the char limit.. WTF?
 
             # Establish asynchronous connection to API and determine states.
             async with ClientSession(headers = self.headers) as session:
