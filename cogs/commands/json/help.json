@@ -14,6 +14,7 @@
   },
   "embed": {
     "title": "Help",
+    "description": "? is an indicator for optional parameters.",
     "color": 7506394,
     "thumbnail": {
       "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
@@ -21,12 +22,12 @@
     "fields": [
       {
         "name": "Utilities",
-        "value": "**/help** [name]?",
+        "value": "**/help**\n**/ping**",
         "inline": "True"
       },
       {
         "name": "Translation",
-        "value": "**/translate** [target] [text]\n**/transauto** #[channel] [target]",
+        "value": "**/translate**\n**/transauto**",
         "inline": "True"
       },
       {

@@ -2,10 +2,9 @@
 import codecs
 from sys import getsizeof
 from typing import Union
+from requests import get, post
 from requests.utils import requote_uri
-from asyncio import sleep
-from aiohttp import ClientSession
-from aiohttp.web import json_response as json
+from json import loads
 from . import Errors
 
 class DeepLAPI:
@@ -15,7 +14,8 @@ class DeepLAPI:
         # Declare HTTP information variables.
         self.HTTP = f"https://api.deepl.com/v2/translate?auth_key={auth}"
         self.headers = {
-            "User-Agent": "YourApp",
+            "Host": "api.deepl.com",
+            "User-Agent": "Transword",
             "Accept": "*/*",
             "Content-Type": "application/x-www-form-urlencoded"
         }
@@ -39,11 +39,11 @@ class DeepLAPI:
 
         print("[DEEPLAPI] The DeepL API has been activated.")
 
-    async def translate(self,
-                        *,
-                        text: Union[str, list],
-                        target: str,
-                        types: list = ""):
+    def translate(self,
+                  *,
+                  text: Union[str, list],
+                  target: str,
+                  types: list = ""):
 
         """
             Translates one query/line of text to the specified language.
@@ -62,59 +62,56 @@ class DeepLAPI:
             )
         """
 
-        try:
-            # Check if any of our arguments are void.
-            if text in [[], ""]:
-                raise ScriptError(1001)
-            if target not in self.target:
-                raise ScriptError(1002)
+        # Check if any of our arguments are void.
+        if text in [[], ""]:
+            raise Errors.ScriptError(1001)
+        if target not in self.target:
+            raise Errors.ScriptError(1002)
 
-            # Ensure HTTP request is safefully encoded.
-            queries = text
+        # Ensure HTTP request is safefully encoded.
+        queries = f"text={text}"
 
-            if isinstance(text, list):
-                if len(text) <= 50:
-                    queries = "&text=".join(query)
+        if isinstance(text, list):
+            if len(text) <= 50:
+                queries = "&text=".join(query)
+            else:
+                raise Errors.HTTPError(413)
+
+        # Do some format checks if options do exist.
+        options = types
+
+        if options != "":
+            options = "".join(f"&{opt[0]}={opt[1]}" for opt in types)
+
+            for opt in types:
+                # Have to keep this all str-based!
+                if not isinstance(opt[0], str):
+                    opt[0] = str(opt[0])
+                if not isinstance(opt[1], str):
+                    opt[1] = str(opt[1])
+                if opt[0] not in self.options:
+                    raise Errors.ScriptError(1003)
+                elif opt[0] == "formality":
+                    # If formality is on but language is in the exception list.
+                    if target in ["EN", "EN-GB", "EN-US",
+                                  "ES", "JA", "ZH"]:
+                        raise Errors.HTTPError(503)
                 else:
-                    raise HTTPError(413)
+                    if opt[1] not in self.options[opt[0]]:
+                        raise Errors.ScriptError(1004)
 
-            queries = queries.encode("utf-8")
+        # Encode the URI path to be ready for request sending.
+        encoded_url = requote_uri(f"{self.HTTP}&{queries}&target_lang={target.lower()}{options}").replace("%0A", "")
 
-            # Do some format checks if options do exist.
-            if types != "":
-                options = "".join(f"&{opt[0]}={opt[1]}" for opt in types)
+        # Give back some information.
+        print(f"[DEEPLAPI] Translation request is being attempted now...")
+        print(f"Path: {encoded_url}\n... Target: {target}\n... Text: {text}\n... Options: {options}")
 
-                for opt in types:
-                    # Have to keep this all str-based!
-                    if not isinstance(opt[0], str):
-                        opt[0] = str(opt[0])
-                    if not isinstance(opt[1], str):
-                        opt[1] = str(opt[1])
-                    if opt[0] not in self.options:
-                        raise ScriptError(1003)
-                    elif opt[0] == "formality":
-                        # If formality is on but language is in the exception list.
-                        if target in ["EN", "EN-GB", "EN-US",
-                                      "ES", "JA", "ZH"]:
-                            raise HTTPError(503)
-                    else:
-                        if opt[1] not in self.options[opt]:
-                            raise ScriptError(1004)
+        # Establish asynchronous connection to API and determine states.
+        error = get(url = encoded_url)
 
-            # Encode the URI path to be ready for request sending.
-            encoded_url = requote_uri(f"{self.HTTP}{queries}&target_lang={target}{options}> HTTP/1.0")
-            self.headers["Content-Length"] = getsizeof(queries)
-            # for some reason, DeepL want you to send over KB information so they can upcharge
-            # for this as well as the char limit.. WTF?
-
-            # Establish asynchronous connection to API and determine states.
-            async with ClientSession(headers = self.headers) as session:
-                async with session.get(url = encoded_url) as error:
-                    if self.parse_error(error.status):
-                        raise HTTPError(code = resp, details = json(error)["message"])
-                async with session.post(url = encoded_url) as data:
-                    return json(data)["translations"][0]
-        except ScriptError as exception:
-            print(f"[DEEPLAPI] {exception}")
-
-        sleep(3) # force delay to avoid 429 responses..
+        if error:
+            return loads(error.content)
+        else:
+            data = get(url = encoded_url)
+            return loads(data.content)

@@ -15,7 +15,7 @@ class Transword:
             command_prefix = "/",
             help_command = None
         )
-        self.cogs = ["Utils", "SlashAPI"]
+        self.cogs = ["Utils", "Translation", "SlashAPI"]
 
         self.load_cogs()
 

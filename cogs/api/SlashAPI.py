@@ -36,7 +36,7 @@ class SlashAPI(commands.Cog):
             json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
             return json
         else:
-            raise ScriptError(1000)
+            raise Errors.ScriptError(1000)
 
     async def remove(self,
                      *,
@@ -124,7 +124,7 @@ class SlashAPI(commands.Cog):
                     # Write a new command JSON entry with the request response.
                     TinyDB(f"commands/json/{cmd_name}.json").insert(self.request)
                 else:
-                    raise GatewayError(4005)
+                    raise Errors.GatewayError(4005)
             except error.RequestFailure as exception:
                 print(f"[SLASHAPI] {exception}")
         except GatewayError as exception:

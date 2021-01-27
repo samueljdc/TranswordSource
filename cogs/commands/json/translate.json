@@ -1,0 +1,119 @@
+{
+  "decorator": {
+    "name": "translate",
+    "description": "Translates text from a foreign language into another one specified.",
+    "guild_ids": [799685484313968670],
+    "options": [
+      {
+        "name": "target",
+        "description": "The language you are trying to translate into.",
+        "type": 3,
+        "required": "True",
+        "choices": [
+          {
+            "name": "German (DE)",
+            "value": "DE"
+          },
+          {
+            "name": "English (EN)",
+            "value": "EN"
+          },
+          {
+            "name": "French (FR)",
+            "value": "FR"
+          },
+          {
+            "name": "Italian (IT)",
+            "value": "IT"
+          },
+          {
+            "name": "Japanese (JA)",
+            "value": "JA"
+          },
+          {
+            "name": "Spanish (ES)",
+            "value": "ES"
+          },
+          {
+            "name": "Polish (PL)",
+            "value": "PL"
+          },
+          {
+            "name": "Portuguese (PT)",
+            "value": "PT"
+          },
+          {
+            "name": "Russian (RU)",
+            "value": "RU"
+          },
+          {
+            "name": "Chinese (ZH)",
+            "value": "ZH"
+          }
+        ]
+      },
+      {
+        "name": "text",
+        "description": "The contents that you are translating.",
+        "type": 3,
+        "required": "True"
+      },
+      {
+        "name": "format",
+        "description": "Formats your message into a specific structure.",
+        "type": 3,
+        "required": "False",
+        "choices": [
+          {
+            "name": "Punctuated",
+            "value": "default"
+          },
+          {
+            "name": "Paragraph",
+            "value": "1"
+          },
+          {
+            "name": "Continuous sentence.",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "name": "formality",
+        "description": "How formal you want your translation to be.",
+        "type": 3,
+        "required": "False",
+        "choices": [
+          {
+            "name": "Formal",
+            "value": "more"
+          },
+          {
+            "name": "Informal",
+            "value": "less"
+          }
+        ]
+      }
+    ]
+  },
+  "embed": {
+    "title": "Translation",
+    "color": 7506394,
+    "fields": [
+      {
+        "name": "Target Language",
+        "value": "Translated Content",
+        "inline": "True"
+      },
+      {
+        "name": "Source Language",
+        "value": "Original Content",
+        "inline": "True"
+      }
+    ],
+    "footer": {
+      "text": "This bot utilizes the DeepL API!",
+      "icon_url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+    }
+  }
+}
