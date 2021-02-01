@@ -50,5 +50,12 @@ class Utils(commands.Cog):
             hidden = True
         )
 
+    @cog_slash(**SAPI.read("about")["decorator"])
+    async def _about(self, ctx: SlashContext):
+        """ Provides an embed showing information about the bot. """
+
+        embed = discord.Embed.from_dict(SAPI.read("about")["embed"])
+        await ctx.send(embeds = [embed])
+
 def setup(bot):
     bot.add_cog(Utils(bot))

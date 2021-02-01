@@ -1,0 +1,57 @@
+{
+  "decorator": {
+    "name": "transauto",
+    "description": "Automatically translates foreign language text into another one specified.",
+    "guild_ids": [799685484313968670],
+    "options": [
+      {
+        "name": "target",
+        "description": "The language you are trying to translate into.",
+        "type": 3,
+        "required": "True",
+        "choices": [
+          {
+            "name": "German (DE)",
+            "value": "DE"
+          },
+          {
+            "name": "English (EN)",
+            "value": "EN"
+          },
+          {
+            "name": "French (FR)",
+            "value": "FR"
+          },
+          {
+            "name": "Italian (IT)",
+            "value": "IT"
+          },
+          {
+            "name": "Japanese (JA)",
+            "value": "JA"
+          },
+          {
+            "name": "Spanish (ES)",
+            "value": "ES"
+          },
+          {
+            "name": "Polish (PL)",
+            "value": "PL"
+          },
+          {
+            "name": "Portuguese (PT)",
+            "value": "PT"
+          },
+          {
+            "name": "Russian (RU)",
+            "value": "RU"
+          },
+          {
+            "name": "Chinese (ZH)",
+            "value": "ZH"
+          }
+        ]
+      }
+    ]
+  }
+}

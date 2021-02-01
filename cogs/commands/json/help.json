@@ -35,10 +35,6 @@
         "value": "We'll inform you about new commands coming soon here when they're being considered!",
         "inline": "True"
       }
-    ],
-    "footer": {
-      "text": "This bot utilizes the DeepL API!",
-      "icon_url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
-    }
+    ]
   }
 }

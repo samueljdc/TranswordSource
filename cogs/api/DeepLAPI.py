@@ -1,10 +1,14 @@
-# Imports libraries required.
+# Standard libraries
 import codecs
 from sys import getsizeof
+
+# 3rd party libraries
 from typing import Union
 from requests import get, post
 from requests.utils import requote_uri
 from json import loads
+
+# Local libraries
 from . import Errors
 
 class DeepLAPI:
@@ -43,7 +47,7 @@ class DeepLAPI:
                   *,
                   text: Union[str, list],
                   target: str,
-                  types: list = ""):
+                  types: list = "") -> dict:
 
         """
             Translates one query/line of text to the specified language.

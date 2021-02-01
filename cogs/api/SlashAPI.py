@@ -1,13 +1,13 @@
-# Imports required API libraries.
+# 3rd party libraries
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
 from discord_slash.utils.manage_commands import remove_slash_command, add_slash_command, get_all_commands
-
-# Imports additional libraries required.
 from json import loads
 from typing import Union
 from tinydb import TinyDB
+
+# Local libraries
 from . import Errors
 
 class SlashAPI(commands.Cog):
