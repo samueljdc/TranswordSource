@@ -41,11 +41,12 @@ async def on_ready():
 
     # Some internal information variables being passed.
     time = datetime.now().strftime("%b %d %Y %H:%M:%S")
+    servers = len(transword.bot.guilds)
 
     print(f"[MAIN] The bot is now online, passing details...")
     print(f"... Started: {time}")
-    print("".join("=" for i in range(60))) # TODO: Re-write in more organized manner, very messy approach.
-
+    print(f"... Server Count: {servers}")
+    print("".join("=" for i in range(60)))
 
 transword.bot.run(
     open(".TOKEN", "r").read(),

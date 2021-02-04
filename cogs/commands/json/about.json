@@ -4,34 +4,72 @@
     "description": "Provides an embed showing information about the bot.",
     "guild_ids": [799685484313968670]
   },
-  "embed": {
-    "title": "About",
-    "color": 7506394,
-    "thumbnail": {
-      "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+  "embeds": [
+    {
+      "title": "About",
+      "color": 7506394,
+      "thumbnail": {
+        "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+      },
+      "fields": [
+        {
+          "name": "What is Transword?",
+          "value": "Transword is the future of Discord translation bots. The purpose of Transword is to help serve as a bridge connecting communities together bound by language barriers. Whether this may be your friends, a community, or international support server, Transword aims to provide the help that you need with the best Deep Learning AI able to be offered at this time.",
+          "inline": "False"
+        },
+        {
+          "name": "How does Transword work?",
+          "value": "Transword utilizes the DeepL API, one of the best APIs that are out there to be offered to the public for foreign language translation. This API has been specifically chosen for its accuracy and authenticity over the amount of languages that it can translate. Rest assured, Transword will never be perfect, but it is far better than Google Translate and Yandex, despite having less languages to choose from."
+        },
+        {
+          "name": "Is this for free?",
+          "value": "Yes! Transword will *always* stay free for the public to use. However, if you would like to help support the project in terms of finances, (since APIs don't come cheap when used on a massive scale) then please feel free to check out our [Patreon tiers here!](https://www.patreon.com/transword) All patrons are generously appreciated."
+        }
+      ],
+      "footer": {
+        "text": "This bot was made by fl0w#0001. | Page 1/2"
+      }
     },
+    {
+      "title": "About",
+      "color": 7506394,
+      "thumbnail": {
+        "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+      },
+      "fields": [
+        {
+          "name": "Why do you limit to 200 characters?",
+          "value": "Unfortunately, not everything comes for free in the real world. Here on Discord, we wish to provide our users the most lenient options available for their own personal use. Transword has been no exception to this, and we give 200 characters available for translation. Statistically, most internet viewers type on average 180 characters per message. *20 extra for you to use the emotes!*"
+        },
+        {
+          "name": "Where can I contact for support?",
+          "value": "Please reach out to us on our [Discord Server here](https://discord.gg/4n7WRHp86P) if you have any questions, concerns, problems or feedback. Your voice is important to us in order to provide a more qualitative experience for everyone."
+        }
+      ],
+      "footer": {
+        "text": "This bot was made by fl0w#0001. | Page 2/2"
+      }
+    }
+  ],
+  "help": {
+    "title": "Help",
+    "color": 7506394,
     "fields": [
       {
-        "name": "What is Transword?",
-        "value": "Transword is the future of Discord translation bots. The purpose of Transword is to help serve as a bridge connecting communities together bound by language barriers. Whether this may be your friends, a community, or international support server, Transword aims to provide the help that you need with the best Deep Learning AI able to be offered at this time.",
+        "name": "Command Name",
+        "value": "`/about`",
+        "inline": "True"
+      },
+      {
+        "name": "Command Type",
+        "value": "Utilities",
+        "inline": "True"
+      },
+      {
+        "name": "Description",
+        "value": "The `/about` command provides an embed showing information about the bot. This command is typed as it's shown.",
         "inline": "False"
-      },
-      {
-        "name": "How does Transword work?",
-        "value": "Transowrd utilizes the DeepL API, one of the best APIs that are out there to be offered to the public for foreign language translation. This API has been specifically chosen for its accuracy and authenticity over the amount of languages that it can translate. Rest assured, Transword will never be perfect, but it is far better than Google Translate and Yandex, despite having less languages to choose from."
-      },
-      {
-        "name": "Is this for free?",
-        "value": "Yes! Transword will *always* stay free for the public to use. However, if you would like to help support the project in terms of finances, (since APIs don't come cheap when used on a massive scale) then please feel free to my [PayPal!](https://paypal.me/jamesw02) All donations are generously appreciated. ~~In the future we plan on giving donators special perks, too.~~"
-      },
-      {
-        "name": "Where can I contact for support?",
-        "value": "Please reach out to us on our [Discord Server here](https://discord.gg/4n7WRHp86P) if you have any questions, concerns, problems or feedback. Your voice is important to us in order to provide a more qualitative experience for everyone."
       }
-    ],
-    "footer": {
-      "text": "This bot is maintained by Sirius#0002.",
-      "icon_url": "https://cdn.discordapp.com/avatars/242351388137488384/991308ffa1c92154328cbbd368f4108b.png"
-    }
+    ]
   }
 }

@@ -1,6 +1,7 @@
 # 3rd party libraries
-import discord
-from discord.ext import commands
+from discord import Embed
+from discord.utils import get
+from discord.ext.commands import Cog
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
 from asyncio import get_event_loop
@@ -9,7 +10,7 @@ from asyncio import get_event_loop
 from ..api.SlashAPI import SlashAPI as SAPI
 from ..api.DeepLAPI import DeepLAPI as DAPI
 
-class Translation(commands.Cog):
+class Translation(Cog):
     """ A cog handling all translation commands for the Bot. """
 
     def __init__(self, bot):
@@ -24,7 +25,6 @@ class Translation(commands.Cog):
 
         # Define the DeepL API access.
         self.key = open(".AUTHKEY", "r").read()
-        self.API = DAPI(self.key)
 
         self.bot = bot
         self.bot.slash.get_cog_commands(self)
@@ -32,7 +32,6 @@ class Translation(commands.Cog):
     def cog_unload(self):
         self.bot.slash.remove_cog_commands(self)
 
-    # TODO: Figure out a more organized approach for the asyncio method to run DeepL API functions.
     @cog_slash(**SAPI.read("translate")["decorator"])
     async def _translate(self,
                          ctx: SlashContext,
@@ -48,7 +47,10 @@ class Translation(commands.Cog):
         if formality != "":
             if target in ["EN", "EN-GB", "EN-US",
                           "ES", "JA", "ZH"]:
-                await ctx.send(content = f"Sorry {ctx.author.mention}, but `{target}` is not a supported language for formal formatting!\n(Formality argument has been ignored.)")
+                await ctx.send(
+                    content = f"Sorry {ctx.author.mention}, but `{target}` is not a supported language for formal formatting!\n(Formality argument has been ignored.)",
+                    complete_hidden = True
+                )
             else:
                 options.append(["formality", formality])
         if format != "":
@@ -56,23 +58,27 @@ class Translation(commands.Cog):
 
         # Run the DeepL API to translate for us as long as within character limits.
         translation = None
-        
-        if len(text) <= 200:
-            translation = self.API.translate(
+        chars = len(text)
+
+        if chars <= 200:
+            translation = DAPI(self.key).translate(
                 text = text,
                 target = target,
                 types = options
             )["translations"][0]
         else:
-            await ctx.send(content = "Sorry, but your message exceeds the `200` character limit with a total of `{chars}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.")
+            await ctx.send(
+                content = f"Sorry {ctx.author.mention}, but your message exceeds the `200` character limit with a total of `{chars}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
+                complete_hidden = True
+            )
             translation = False
 
         if translation:
             # Pull the embed and make some modifications.
-            embed = discord.Embed.from_dict(SAPI.read("translate")["embeds"][0])
+            embed = Embed.from_dict(SAPI.read("translate")["embeds"][0])
             embed.set_field_at(0, name = f"`{translation['detected_source_language']}`",    value = text,                   inline = True)
             embed.set_field_at(1, name = f"`{target}`",                                     value = translation["text"],    inline = True)
-            embed.set_thumbnail(url = ctx.author.avatar_url)
+            embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
             await ctx.send(3, embeds = [embed])
 
@@ -82,7 +88,42 @@ class Translation(commands.Cog):
                          target: str):
         """ Automatically translates foreign language text into another one specified. """
 
-        pass
+        _role = f"auto{target}"
+
+        async def check(role):
+            roles = await ctx.guild.fetch_roles()
+
+            for target in roles:
+                if target.name == _role:
+                    return True
+                else:
+                    await ctx.guild.create_role(name = _role)
+                    return True
+
+        if await check(_role):
+            give_role = False
+            _object = get(ctx.guild.roles, name = _role)
+
+            for role in ctx.author.roles:
+                if _object.name != role.name:
+                    give_role = True
+                else:
+                    give_role = False
+
+            if give_role == True:
+                await ctx.author.add_roles(role)
+                await ctx.send(
+                    content = f"Automatic translation for `{target}` is now on!\nAll messages you send will now be automatically converted until this command is passed again.",
+                    complete_hidden = True
+                )
+            else:
+                await ctx.author.remove_roles(role)
+                await ctx.send(
+                    content = f"Automatic translation for `{target}` is now off.\nAll messages you send will no longer be automatically converted.",
+                    complete_hidden = True
+                )
+
+        # await ctx.send(content = "Sorry, but this feature is not implemented yet!")
 
 def setup(bot):
     bot.add_cog(Translation(bot))

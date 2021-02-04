@@ -22,7 +22,7 @@
     "fields": [
       {
         "name": "Utilities",
-        "value": "**/help**\n**/ping**",
+        "value": "**/help**\n**/ping**\n**/about**",
         "inline": "True"
       },
       {

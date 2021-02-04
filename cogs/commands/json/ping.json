@@ -3,5 +3,26 @@
     "name": "ping",
     "description": "Returns the bot's latency as milliseconds.",
     "guild_ids": [799685484313968670]
+  },
+  "help": {
+    "title": "Help",
+    "color": 7506394,
+    "fields": [
+      {
+        "name": "Command Name",
+        "value": "`/ping`",
+        "inline": "True"
+      },
+      {
+        "name": "Command Type",
+        "value": "Utilities",
+        "inline": "True"
+      },
+      {
+        "name": "Description",
+        "value": "The `/ping` command returns the bot's latency as milliseconds. This command is typed as it's shown.",
+        "inline": "False"
+      }
+    ]
   }
 }
