@@ -1,3 +1,7 @@
+# Secret bot files
+.TOKEN
+.AUTHKEY
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
