@@ -7,6 +7,7 @@ from ..api.SlashAPI import SlashAPI as SAPI
 
 # Imports additional libraries used.
 from json import dumps
+from asyncio import TimeoutError
 
 class Utils(Cog):
     """ A cog handling all utility commands for the Bot. """
@@ -19,7 +20,7 @@ class Utils(Cog):
         """ Returns an embed showing the bot's commands. """
 
         # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
+        await ctx.respond()
 
         # Check if we're searching for a specific command name.
         if name in ["", None]:
@@ -43,45 +44,54 @@ class Utils(Cog):
             hidden = True
         )
 
-    # @Cog.listener()
-    # async def on_reaction_add(self, reaction, user):
-    #     """ Helps handle logic for the about menu. """
-    #
-    #     # Ignore if it's from the bot, otherwise check it out.
-    #     if user.id == 799697654279307314:
-    #         pass
-    #     else:
-    #         embeds = [
-    #             Embed.from_dict(SAPI.read("about")["embeds"][0]),
-    #             Embed.from_dict(SAPI.read("about")["embeds"][1])
-    #         ]
-    #
-    #         if reaction.message.embeds[0].title == "About":
-    #             pos = 0 if reaction.message.embeds[0] == embeds[0] else 1
-    #             emote = "\N{LEFTWARDS BLACK ARROW}" if pos == 0 else "\N{BLACK RIGHTWARDS ARROW}"
-    #
-    #             print(f"[REACTION_LOGIC] Determined existent! Pos: {pos}\nEmote type: {emote}")
-    #
-    #             await reaction.message.edit(embed = [embeds[pos]])
-    #             await reaction.message.remove_reaction(emote, user)
-
     @cog_slash(**SAPI.read("about")["decorator"])
     async def _about(self, ctx: SlashContext):
         """ Provides an embed showing information about the bot. """
 
+        # Set up the structure of the command.
         embeds = [
             Embed.from_dict(SAPI.read("about")["embeds"][0]),
             Embed.from_dict(SAPI.read("about")["embeds"][1])
         ]
+        buttons = [
+            u"\u2B05", # Left Arrow
+            u"\u27A1"  # Right Arrow
+        ]
+        current = 0
 
-        # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
+        # Send the initial contents.
+        msg = await ctx.send(embeds = [embeds[current]])
 
-        for embed in embeds:
-            msg = await ctx.send(embeds = [embed])
+        # Define the about parameters.
+        for button in buttons:
+            await msg.add_reaction(button)
 
-        # await msg.add_reaction("\N{LEFTWARDS BLACK ARROW}")
-        # await msg.add_reaction("\N{BLACK RIGHTWARDS ARROW}")
+        # Allow reactions to be added and check the logic for movements.
+        while True:
+            try:
+                reaction, user = await self.bot.wait_for(
+                    "reaction_add",
+                    check = lambda reaction, user: user == ctx.author and reaction.emoji in buttons,
+                    timeout = 60
+                )
+            except TimeoutError:
+                pass
+            else:
+                previous = current
+
+                # Move backward if already forward.
+                if reaction.emoji == buttons[0]:
+                    current = 0
+
+                # Move forward only if we're able to.
+                elif reaction.emoji == buttons[1]:
+                    current = 1
+
+                for button in buttons:
+                    await msg.remove_reaction(button, ctx.author)
+
+                if current != previous:
+                    await msg.edit(embed = embeds[current])
 
     @cog_slash(**SAPI.read("vote")["decorator"])
     async def _vote(self, ctx: SlashContext):
