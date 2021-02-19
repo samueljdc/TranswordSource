@@ -5,6 +5,7 @@ from discord.ext.commands import Cog
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
 from asyncio import get_event_loop
+from math import floor
 
 # Local libraries
 from ..api.SlashAPI import SlashAPI as SAPI
@@ -14,23 +15,10 @@ class Translation(Cog):
     """ A cog handling all translation commands for the Bot. """
 
     def __init__(self, bot):
-        # Makes slash commands existent if not set.
-        if not hasattr(bot, "slash"):
-            bot.slash = SlashCommand(
-                bot,
-                override_type = True,
-                auto_register = True,
-                auto_delete = True
-            )
+        self.bot = bot
 
         # Define the DeepL API access.
         self.key = open(".AUTHKEY", "r").read()
-
-        self.bot = bot
-        self.bot.slash.get_cog_commands(self)
-
-    def cog_unload(self):
-        self.bot.slash.remove_cog_commands(self)
 
     @cog_slash(**SAPI.read("translate")["decorator"])
     async def _translate(self,
@@ -44,12 +32,15 @@ class Translation(Cog):
         # Check if any optional arguments were passed.
         options = [["preserve_formatting", "0"]]
 
+        # Invoke a response to clean the inputs.
+        await ctx.respond(eat = True)
+
         if formality != "":
             if target in ["EN", "EN-GB", "EN-US",
                           "ES", "JA", "ZH"]:
                 await ctx.send(
                     content = f"Sorry {ctx.author.mention}, but `{target}` is not a supported language for formal formatting!\n(Formality argument has been ignored.)",
-                    complete_hidden = True
+                    hidden = True
                 )
             else:
                 options.append(["formality", formality])
@@ -69,7 +60,7 @@ class Translation(Cog):
         else:
             await ctx.send(
                 content = f"Sorry {ctx.author.mention}, but your message exceeds the `200` character limit with a total of `{chars}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
-                complete_hidden = True
+                hidden = True
             )
             translation = False
 
@@ -80,7 +71,7 @@ class Translation(Cog):
             embed.set_field_at(1, name = f"`{target}`",                                     value = translation["text"],    inline = True)
             embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
-            await ctx.send(3, embeds = [embed])
+            await ctx.send(embeds = [embed])
 
     @cog_slash(**SAPI.read("transauto")["decorator"])
     async def _transauto(self,
@@ -110,20 +101,50 @@ class Translation(Cog):
                 else:
                     give_role = False
 
+            # Invoke a response to clean the inputs.
+            await ctx.respond(eat = True)
+
             if give_role == True:
                 await ctx.author.add_roles(role)
                 await ctx.send(
                     content = f"Automatic translation for `{target}` is now on!\nAll messages you send will now be automatically converted until this command is passed again.",
-                    complete_hidden = True
+                    hidden = True
                 )
             else:
                 await ctx.author.remove_roles(role)
                 await ctx.send(
                     content = f"Automatic translation for `{target}` is now off.\nAll messages you send will no longer be automatically converted.",
-                    complete_hidden = True
+                    hidden = True
                 )
 
         # await ctx.send(content = "Sorry, but this feature is not implemented yet!")
+
+    @cog_slash(**SAPI.read("stats")["decorator"])
+    async def _stats(self,
+                     ctx: SlashContext):
+        """ Provides a list of statistics for the bot's usage. """
+
+        # Collect information about our usages through the DeepL API.
+        translation = DAPI(self.key).usage()
+        progress = floor(
+            (translation["character_count"] / translation["character_limit"])
+            * 12
+        )
+
+        embed = Embed.from_dict(SAPI.read("stats")["embed"])
+        embed.set_field_at(0, name = "Bot Usage",       value = "`" + str(translation["character_count"]) + "`",    inline = True)
+        embed.set_field_at(1, name = "Bot Limit",       value = "`" + str(translation["character_limit"]) + "`",    inline = True)
+        embed.set_field_at(2, name = "Progress Bar",    value = "`[" +
+            "".join("=" for _n in range(progress)) +
+            "".join(" " for _n in range(12 - progress))
+        + "]`",                                                                                                     inline = True)
+        embed.set_field_at(3, name = "Character Usage", value = "`TBA.`",                                           inline = True)
+        embed.set_field_at(4, name = "Character Limit", value = "`200`",                                            inline = True)
+        embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
+
+        # Invoke a response to clean the inputs.
+        await ctx.respond()
+        await ctx.send(embeds = [embed])
 
 def setup(bot):
     bot.add_cog(Translation(bot))

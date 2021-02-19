@@ -7,6 +7,7 @@ from typing import Union
 from requests import get, post
 from requests.utils import requote_uri
 from json import loads
+from colorama import Fore, Back, Style, init
 
 # Local libraries
 from . import Errors
@@ -16,7 +17,10 @@ class DeepLAPI:
 
     def __init__(self, auth):
         # Declare HTTP information variables.
-        self.HTTP = f"https://api.deepl.com/v2/translate?auth_key={auth}"
+        self.HTTP = {
+            "translate": f"https://api.deepl.com/v2/translate?auth_key={auth}",
+            "usage": f"https://api.deepl.com/v2/usage?auth_key={auth}"
+        }
         self.headers = {
             "Host": "api.deepl.com",
             "User-Agent": "Transword",
@@ -41,7 +45,24 @@ class DeepLAPI:
             "formality": ["default", "more", "less"]
         }
 
-        print("[DEEPLAPI] The DeepL API has been activated.")
+    def colored(self,
+                text: str):
+        """
+            Allow colors to help format the Python terminal text to ease eyes.
+
+            .colored("[[ERROR]][SLASHAPI][[END]] This fucked up!")
+        """
+
+        colors = {
+            "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
+            "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
+            "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+        }
+
+        for color in colors:
+            text = text.replace(f"[[{color}]]", colors[color])
+
+        return text
 
     def translate(self,
                   *,
@@ -105,11 +126,34 @@ class DeepLAPI:
                         raise Errors.ScriptError(1004)
 
         # Encode the URI path to be ready for request sending.
-        encoded_url = requote_uri(f"{self.HTTP}&{queries}&target_lang={target.lower()}{options}").replace("%0A", "")
+        encoded_url = requote_uri(f"{self.HTTP['translate']}&{queries}&target_lang={target.lower()}{options}").replace("%0A", "")
 
         # Give back some information.
-        print(f"[DEEPLAPI] Translation request is being attempted now...")
-        print(f"Path: {encoded_url}\n... Target: {target}\n... Text: {text}\n... Options: {options}")
+        print(self.colored(f"[[INFO]][DEEPLAPI][[END]] Translation request is being attempted now..."))
+        print(self.colored(f"[[END]]... Path: {encoded_url}\n... Target: {target}\n... Text: {text}\n... Options: {options}[[END]]"))
+
+        # Establish asynchronous connection to API and determine states.
+        error = get(url = encoded_url)
+
+        if error:
+            return loads(error.content)
+        else:
+            data = get(url = encoded_url)
+            return loads(data.content)
+
+    def usage(self):
+        """
+            Collects statistics of the bot's usage.
+
+            .usage()
+        """
+
+        # Encode the URI path to be ready for request sending.
+        encoded_url = requote_uri(f"{self.HTTP['usage']}").replace("%0A", "")
+
+        # Give back some information.
+        print(self.colored(f"[[INFO]][DEEPLAPI][[END]] Statistics request is being attempted now..."))
+        print(self.colored(f"[[END]]... Path: {encoded_url}[[END]]"))
 
         # Establish asynchronous connection to API and determine states.
         error = get(url = encoded_url)

@@ -6,6 +6,7 @@ from discord_slash.utils.manage_commands import remove_slash_command, add_slash_
 from json import loads
 from typing import Union
 from tinydb import TinyDB
+from colorama import Fore, Back, Style, init
 
 # Local libraries
 from . import Errors
@@ -14,12 +15,34 @@ class SlashAPI(commands.Cog):
     """ API for handling all of the slash command utilization. """
 
     def __init__(self, bot):
+        # Automatically reset the color formatting.
+        init(autoreset = True)
+
         # Define some details of the bot.
         self.bot = bot
         self.details = {
             "token": open(".TOKEN", "r").read(),
             "id": 799697654279307314
         }
+
+    def colored(self,
+                text: str):
+        """
+            Allow colors to help format the Python terminal text to ease eyes.
+
+            .colored("[[ERROR]][SLASHAPI][[END]] This fucked up!")
+        """
+
+        colors = {
+            "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
+            "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
+            "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+        }
+
+        for color in colors:
+            text = text.replace(f"[[{color}]]", colors[color])
+
+        return text
 
     def read(file: str,
              self = None) -> list:
@@ -31,7 +54,18 @@ class SlashAPI(commands.Cog):
         """
 
         if file != "":
-            print(f"[SLASHAPI] Successfully read command \"{file}\" JSON contents.")
+            colors = {
+                "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
+                "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
+                "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+            }
+
+            text = f"[[INFO]][SLASHAPI][[END]] Successfully read command [[INFO]]'{file}'[[END]] JSON contents."
+
+            for color in colors:
+                text = text.replace(f"[[{color}]]", colors[color])
+
+            print(text)
 
             json = loads(open(f"cogs/commands/json/{file}.json", "r").read())
             return json
@@ -60,10 +94,10 @@ class SlashAPI(commands.Cog):
                 cmd_id
             )
         except error.RequestFailure as exception:
-            print(f"[SLASHAPI] {exception}")
+            print(self.colored(f"[[ERROR]][SLASHAPI][[END]] [[ERROR]]{exception}[[END]]"))
 
         if self.request == 204:
-            print(f"[SLASHAPI] Deletion of {cmd_id} was successful.")
+            print(self.colored(f"[[INFO]][SLASHAPI][[END]] Deletion of [[INFO]]{cmd_id}[[END]] was successful."))
 
         return self.request
 
@@ -82,13 +116,13 @@ class SlashAPI(commands.Cog):
                 guild_id
             )
         except error.RequestFailure as exception:
-            print(f"[SLASHAPI] {exception}")
+            print(self.colored(f"[[ERROR]][SLASHAPI][[END]] [[ERROR]]{exception}[[END]]"))
 
         if self.request == []:
-            print("[SLASHAPI] Command IDs found as empty.")
+            print(self.colored("[[INFO]][SLASHAPI][[END]] Command IDs found as empty."))
         else:
             amount = len(self.request)
-            print(f"[SLASHAPI] Command IDs found with {amount} entries.")
+            print(self.colored(f"[[INFO]][SLASHAPI][[END]] Command IDs found with [[INFO]]{amount}[[END]] entries."))
 
         return self.request
 
@@ -126,12 +160,12 @@ class SlashAPI(commands.Cog):
                 else:
                     raise Errors.GatewayError(4005)
             except error.RequestFailure as exception:
-                print(f"[SLASHAPI] {exception}")
+                print(self.colored(f"[[ERROR]][SLASHAPI][[END]] [[ERROR]]{exception}[[END]]"))
         except GatewayError as exception:
-            print(f"[SLASHAPI] {exception}")
+            print(self.colored(f"[[ERROR]][SLASHAPI][[END]] [[ERROR]]{exception}[[END]]"))
 
         if self.request not in [[], None]:
-            print(f"[SLASHAPI] New slash command \"{cmd_name}\" successfully created.")
+            print(self.colored(f"[[INFO]][SLASHAPI][[END]] New slash command [[INFO]]\"{cmd_name}\"[[END]] successfully created."))
 
         return self.request
 

@@ -8,13 +8,39 @@
         "name": "name",
         "description": "Search for information about a specific command.",
         "type": 3,
-        "required": "False"
+        "required": "False",
+        "choices": [
+          {
+            "name": "About Us",
+            "value": "about"
+          },
+          {
+            "name": "Bot Latency",
+            "value": "ping"
+          },
+          {
+            "name": "Manual Translation",
+            "value": "translate"
+          },
+          {
+            "name": "Automatic Translation",
+            "value": "transauto"
+          },
+          {
+            "name": "Translation Statistics",
+            "value": "stats"
+          },
+          {
+            "name": "Voting",
+            "value": "vote"
+          }
+        ]
       }
     ]
   },
   "embed": {
     "title": "Help",
-    "description": "? is an indicator for optional parameters.",
+    "description": "Below is a list of currently available commands to use.",
     "color": 7506394,
     "thumbnail": {
       "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
@@ -22,12 +48,12 @@
     "fields": [
       {
         "name": "Utilities",
-        "value": "**/help**\n**/ping**\n**/about**",
+        "value": "**/help**\n**/ping**\n**/about**\n**/vote**",
         "inline": "True"
       },
       {
         "name": "Translation",
-        "value": "**/translate**\n**/transauto**",
+        "value": "**/translate**\n**/transauto**\n**/stats**",
         "inline": "True"
       },
       {
