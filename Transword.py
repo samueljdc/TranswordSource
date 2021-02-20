@@ -17,7 +17,7 @@ class Transword:
         init()
         system("title Transword - Bot Terminal")
 
-        print(f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}")
+        # print(f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}")
         print(ansi.clear_screen())
 
         # Define the bot variables.
@@ -49,7 +49,7 @@ class Transword:
         colors = {
             "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
             "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
-            "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+            "END": f"{Fore.WHITE}{Back.BLACK}{Style.RESET_ALL}"
         }
 
         for color in colors:

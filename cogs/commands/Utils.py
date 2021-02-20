@@ -53,10 +53,7 @@ class Utils(Cog):
             Embed.from_dict(SAPI.read("about")["embeds"][0]),
             Embed.from_dict(SAPI.read("about")["embeds"][1])
         ]
-        buttons = [
-            u"\u2B05", # Left Arrow
-            u"\u27A1"  # Right Arrow
-        ]
+        buttons = [u"\u2B05", u"\u27A1"]
         current = 0
 
         # Send the initial contents.

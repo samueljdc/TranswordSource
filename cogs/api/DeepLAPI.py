@@ -56,7 +56,7 @@ class DeepLAPI:
         colors = {
             "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
             "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
-            "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+            "END": f"{Fore.WHITE}{Back.BLACK}{Style.BRIGHT}"
         }
 
         for color in colors:

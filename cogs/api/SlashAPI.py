@@ -36,7 +36,7 @@ class SlashAPI(commands.Cog):
         colors = {
             "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
             "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
-            "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+            "END": f"{Fore.WHITE}{Back.BLACK}{Style.BRIGHT}"
         }
 
         for color in colors:
@@ -57,7 +57,7 @@ class SlashAPI(commands.Cog):
             colors = {
                 "ERROR": f"{Fore.WHITE}{Back.RED}{Style.BRIGHT}",
                 "INFO": f"{Fore.WHITE}{Back.YELLOW}{Style.BRIGHT}",
-                "END": f"{Fore.WHITE}{Back.BLUE}{Style.BRIGHT}"
+                "END": f"{Fore.WHITE}{Back.BLACK}{Style.BRIGHT}"
             }
 
             text = f"[[INFO]][SLASHAPI][[END]] Successfully read command [[INFO]]'{file}'[[END]] JSON contents."
