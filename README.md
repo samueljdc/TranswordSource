@@ -7,5 +7,5 @@
 <hr/>
 
 <div align="center">
-  <iframe src="https://transword.xyz/index.html"></iframe>
+  Learn more about Transword <a href="https://transword.xyz"> from our website here. </a>
 </div>
