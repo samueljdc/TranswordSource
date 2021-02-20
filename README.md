@@ -7,5 +7,5 @@
 <hr/>
 
 <div align="center">
-  <img src="https://www.codefactor.io/repository/github/goverfl0w/transword/badge?s=1a5e79d20adb7734d75288580e436dc4d9b2af80" alt="CodeFactor">
+  <iframe src="https://transword.xyz"></iframe>
 </div>
