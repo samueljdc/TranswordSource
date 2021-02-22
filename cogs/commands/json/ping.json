@@ -1,8 +1,7 @@
 {
   "decorator": {
     "name": "ping",
-    "description": "Returns the bot's latency as milliseconds.",
-    "guild_ids": [799685484313968670]
+    "description": "Returns the bot's latency as milliseconds."
   },
   "help": {
     "title": "Help",

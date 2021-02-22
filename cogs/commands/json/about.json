@@ -1,8 +1,7 @@
 {
   "decorator": {
     "name": "about",
-    "description": "Provides an embed showing information about the bot.",
-    "guild_ids": [799685484313968670]
+    "description": "Provides an embed showing information about the bot."
   },
   "embeds": [
     {

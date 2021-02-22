@@ -1,8 +1,7 @@
 {
   "decorator": {
     "name": "vote",
-    "description": "Provides a website link to vote for Transword's reputability.",
-    "guild_ids": [799685484313968670]
+    "description": "Provides a website link to vote for Transword's reputability."
   },
   "help": {
     "title": "Vote",

@@ -2,7 +2,6 @@
   "decorator": {
     "name": "translate",
     "description": "Translates text from a foreign language into another one specified.",
-    "guild_ids": [799685484313968670],
     "options": [
       {
         "name": "target",

@@ -2,7 +2,6 @@
   "decorator": {
     "name": "help",
     "description": "Returns an embed showing the bot's commands.",
-    "guild_ids": [799685484313968670],
     "options": [
       {
         "name": "name",
@@ -19,12 +18,8 @@
             "value": "ping"
           },
           {
-            "name": "Manual Translation",
+            "name": "Translation",
             "value": "translate"
-          },
-          {
-            "name": "Automatic Translation",
-            "value": "transauto"
           },
           {
             "name": "Translation Statistics",

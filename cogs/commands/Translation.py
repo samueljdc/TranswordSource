@@ -79,45 +79,50 @@ class Translation(Cog):
                          target: str):
         """ Automatically translates foreign language text into another one specified. """
 
-        _role = f"auto{target}"
+        # _role = f"auto{target}"
+        #
+        # async def check(role):
+        #     roles = await ctx.guild.fetch_roles()
+        #
+        #     for target in roles:
+        #         if target.name == _role:
+        #             return True
+        #         else:
+        #             await ctx.guild.create_role(name = _role)
+        #             return True
+        #
+        # if await check(_role):
+        #     give_role = False
+        #     _object = get(ctx.guild.roles, name = _role)
+        #
+        #     for role in ctx.author.roles:
+        #         if _object.name != role.name:
+        #             give_role = True
+        #         else:
+        #             give_role = False
+        #
+        #     # Invoke a response to clean the inputs.
+        #     await ctx.respond(eat = True)
+        #
+        #     if give_role == True:
+        #         await ctx.author.add_roles(role)
+        #         await ctx.send(
+        #             content = f"Automatic translation for `{target}` is now on!\nAll messages you send will now be automatically converted until this command is passed again.",
+        #             hidden = True
+        #         )
+        #     else:
+        #         await ctx.author.remove_roles(role)
+        #         await ctx.send(
+        #             content = f"Automatic translation for `{target}` is now off.\nAll messages you send will no longer be automatically converted.",
+        #             hidden = True
+        #         )
 
-        async def check(role):
-            roles = await ctx.guild.fetch_roles()
-
-            for target in roles:
-                if target.name == _role:
-                    return True
-                else:
-                    await ctx.guild.create_role(name = _role)
-                    return True
-
-        if await check(_role):
-            give_role = False
-            _object = get(ctx.guild.roles, name = _role)
-
-            for role in ctx.author.roles:
-                if _object.name != role.name:
-                    give_role = True
-                else:
-                    give_role = False
-
-            # Invoke a response to clean the inputs.
-            await ctx.respond(eat = True)
-
-            if give_role == True:
-                await ctx.author.add_roles(role)
-                await ctx.send(
-                    content = f"Automatic translation for `{target}` is now on!\nAll messages you send will now be automatically converted until this command is passed again.",
-                    hidden = True
-                )
-            else:
-                await ctx.author.remove_roles(role)
-                await ctx.send(
-                    content = f"Automatic translation for `{target}` is now off.\nAll messages you send will no longer be automatically converted.",
-                    hidden = True
-                )
-
-        # await ctx.send(content = "Sorry, but this feature is not implemented yet!")
+        # Invoke a response to clean the inputs.
+        await ctx.respond(eat = True)
+        await ctx.send(
+            content = "Sorry, but this feature is not currently implemented *just* yet! Please consider joining the support server for further updates on this.",
+            hidden = True
+        )
 
     @cog_slash(**SAPI.read("stats")["decorator"])
     async def _stats(self,

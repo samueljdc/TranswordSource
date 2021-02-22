@@ -1,8 +1,7 @@
 {
   "decorator": {
     "name": "stats",
-    "description": "Provides a list of statistics for the bot's usage.",
-    "guild_ids": [799685484313968670]
+    "description": "Provides a list of statistics for the bot's usage."
   },
   "embed": {
     "title": "Statistics",
