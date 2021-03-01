@@ -10,6 +10,7 @@ from math import floor
 # Local libraries
 from ..api.SlashAPI import SlashAPI as SAPI
 from ..api.DeepLAPI import DeepLAPI as DAPI
+from ..api import Errors
 
 class Translation(Cog):
     """ A cog handling all translation commands for the Bot. """
@@ -47,11 +48,15 @@ class Translation(Cog):
         if format != "":
             options.append(["split_sentences", format])
 
-        # Run the DeepL API to translate for us as long as within character limits.
-        translation = None
-        chars = len(text)
+        # Define the rules of how our translation can begin.
+        translation = {
+            "chars": len(text),
+            "limit": 200,
+            "patron": {"isPlus": False, "isPremium": False}
+        }
 
-        if chars <= 200:
+        # Check if the person is within their character limits.
+        if translation["chars"] <= translation["limit"]:
             translation = DAPI(self.key).translate(
                 text = text,
                 target = target,
@@ -59,70 +64,161 @@ class Translation(Cog):
             )["translations"][0]
         else:
             await ctx.send(
-                content = f"Sorry {ctx.author.mention}, but your message exceeds the `200` character limit with a total of `{chars}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
+                content = f"Sorry {ctx.author.mention}, but your message exceeds the `{translation['limit']}` character limit with a total of `{translation['chars']}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
                 hidden = True
             )
             translation = False
 
-        if translation:
-            # Pull the embed and make some modifications.
-            embed = Embed.from_dict(SAPI.read("translate")["embeds"][0])
-            embed.set_field_at(0, name = f"`{translation['detected_source_language']}`",    value = text,                   inline = True)
-            embed.set_field_at(1, name = f"`{target}`",                                     value = translation["text"],    inline = True)
-            embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
+        try:
+            if translation:
+                # Set a flag table for the appropriate flags.
+                flags = {
+                    "DE": "flag_de",
+                    "EN": "flag_us",
+                    "FR": "flag_fr",
+                    "IT": "flag_it",
+                    "JA": "flag_jp",
+                    "ES": "flag_es",
+                    "PL": "flag_nl",
+                    "PT": "flag_pt",
+                    "RU": "flag_ru",
+                    "ZH": "flag_cn"
+                }
 
-            await ctx.send(embeds = [embed])
+                # Pull the embed and make some modifications.
+                embed = Embed.from_dict(SAPI.read("translate")["embed"])
+                embed.set_field_at(0, name = f":{flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`",   value = text,                   inline = True)
+                embed.set_field_at(1, name = f":{flags[target]}: `{target}`",                                                                     value = translation["text"],    inline = True)
+                embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
-    @cog_slash(**SAPI.read("transauto")["decorator"])
-    async def _transauto(self,
-                         ctx: SlashContext,
-                         target: str):
-        """ Automatically translates foreign language text into another one specified. """
+                await ctx.send(embeds = [embed])
+        except Errors.ScriptError as error:
+            await ctx.send(content = f"Error attempting to translate: `{error}`")
 
-        # _role = f"auto{target}"
-        #
-        # async def check(role):
-        #     roles = await ctx.guild.fetch_roles()
-        #
-        #     for target in roles:
-        #         if target.name == _role:
-        #             return True
-        #         else:
-        #             await ctx.guild.create_role(name = _role)
-        #             return True
-        #
-        # if await check(_role):
-        #     give_role = False
-        #     _object = get(ctx.guild.roles, name = _role)
-        #
-        #     for role in ctx.author.roles:
-        #         if _object.name != role.name:
-        #             give_role = True
-        #         else:
-        #             give_role = False
-        #
-        #     # Invoke a response to clean the inputs.
-        #     await ctx.respond(eat = True)
-        #
-        #     if give_role == True:
-        #         await ctx.author.add_roles(role)
-        #         await ctx.send(
-        #             content = f"Automatic translation for `{target}` is now on!\nAll messages you send will now be automatically converted until this command is passed again.",
-        #             hidden = True
-        #         )
-        #     else:
-        #         await ctx.author.remove_roles(role)
-        #         await ctx.send(
-        #             content = f"Automatic translation for `{target}` is now off.\nAll messages you send will no longer be automatically converted.",
-        #             hidden = True
-        #         )
-
-        # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
-        await ctx.send(
-            content = "Sorry, but this feature is not currently implemented *just* yet! Please consider joining the support server for further updates on this.",
-            hidden = True
-        )
+    # @Cog.listener()
+    # async def on_message(self,
+    #                      message):
+    #     """ Handle our automatic translations for those with the role(s). """
+    #
+    #     # Stop the bot from potentially looping and forcing my 429 limits!
+    #     if message.author == self.bot.user:
+    #         return
+    #
+    #     print(f"{message.guild.name} - {message.author}: {message.content}")
+    #
+    #     # Define the rules of how our translation can begin.
+    #     options = [["preserve_formatting", "0"]]
+    #     translation = {
+    #         "chars": len(message.content),
+    #         "limit": 200,
+    #         "patron": {"isPlus": False, "isPremium": False}
+    #     }
+    #
+    #     # Check for if the webhook is in the server.
+    #     async def check(name):
+    #         webhooks = await get(self.bot.guilds, id = message.guild.id).webhooks()
+    #
+    #         for hook in webhooks:
+    #             if hook.name == name:
+    #                 await hook.delete()
+    #
+    #     # Check for the specific translation role.
+    #     def retrieve():
+    #         member = get(message.guild.members, name = message.author.name)
+    #
+    #         for role in member.roles:
+    #             if "auto" in role.name:
+    #                 return get(member.roles, name = role.name)
+    #
+    #     # Allow the bot to "imitate" the user profile.
+    #     role = retrieve()
+    #     exists = await check("Transword")
+    #
+    #     if role:
+    #         # Set up the base details.
+    #         target = role.name.replace("auto", "")
+    #         hook = await message.channel.create_webhook(
+    #             name = "Transword",
+    #             reason = "Automatic translation service."
+    #         )
+    #
+    #         # Check if the person is within their character limits.
+    #         if translation["chars"] <= translation["limit"]:
+    #             translation = DAPI(self.key).translate(
+    #                 text = message.content,
+    #                 target = target,
+    #                 types = options
+    #             )["translations"][0]
+    #         else:
+    #             translation = False
+    #
+    #         # Finally make the attempt to send the webhook off.
+    #         if translation:
+    #             msg = await message.channel.fetch_message(message.id)
+    #
+    #             await hook.send(
+    #                 f"`{translation['detected_source_language']}`: {translation['text']}\n" +
+    #                 f"`{target}`: {message.content}",
+    #                 username = message.author.name,
+    #                 avatar_url = message.author.avatar_url
+    #             )
+    #             await msg.delete()
+    #
+    # @cog_slash(**SAPI.read("transauto")["decorator"])
+    # async def _transauto(self,
+    #                      ctx: SlashContext,
+    #                      target: str):
+    #     """ Automatically translates foreign language text into another one specified. """
+    #
+    #     # Define automatic translation role logic.
+    #     automatic = {
+    #         "name": f"auto{target}",
+    #         "threshold": 0,
+    #         "give": True,
+    #         "forceOff": False
+    #     }
+    #     automatic["role"] = get(ctx.guild.roles, name = automatic["name"])
+    #
+    #     # Check for if the role is in the server.
+    #     async def check(role):
+    #         roles = await ctx.guild.fetch_roles()
+    #         result = False
+    #         result = True in (_role.name != role for _role in roles)
+    #
+    #         return result
+    #
+    #     # Check for if the user needs it given or removed.
+    #     if await check(automatic["name"]):
+    #         for _role in ctx.author.roles:
+    #             if _role.name == automatic["name"]:
+    #                 automatic["give"] = False
+    #                 automatic["threshold"] += 1
+    #
+    #         if automatic["threshold"] > 1:
+    #             automatic["give"] = False
+    #             automatic["forceOff"] = True
+    #     else:
+    #         await ctx.guild.create_role(name = automatic["name"])
+    #
+    #     # Now handle the addition/removal of the role.
+    #     if automatic["give"]:
+    #         await ctx.author.add_roles(automatic["role"])
+    #         await ctx.send(
+    #             content = f"Automatic translation for `{target}` is now on!\nAll future messages from you will now be deleted and translated.",
+    #             hidden = True
+    #         )
+    #     else:
+    #         if automatic["forceOff"]:
+    #             await ctx.send(
+    #                 content = "Sorry, but we do not currently support automatic translations for more than 1 language.",
+    #                 hidden = True
+    #             )
+    #         else:
+    #             await ctx.author.remove_roles(automatic["role"])
+    #             await ctx.send(
+    #                 content = f"Automatic translation for `{target}` is now off.\nYour future messages will no longer be translated for you.",
+    #                 hidden = True
+    #             )
 
     @cog_slash(**SAPI.read("stats")["decorator"])
     async def _stats(self,

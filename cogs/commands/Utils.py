@@ -1,13 +1,14 @@
-# Imports required API libraries.
-from discord import Embed
+# 3rd party libraries
+import requests
+from discord import Embed, Webhook, RequestsWebhookAdapter
 from discord.ext.commands import Cog
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
-from ..api.SlashAPI import SlashAPI as SAPI
-
-# Imports additional libraries used.
 from json import dumps
 from asyncio import TimeoutError
+
+# Imports additional libraries used.
+from ..api.SlashAPI import SlashAPI as SAPI
 
 class Utils(Cog):
     """ A cog handling all utility commands for the Bot. """

@@ -130,7 +130,7 @@ class DeepLAPI:
 
         # Give back some information.
         print(self.colored(f"[[INFO]][DEEPLAPI][[END]] Translation request is being attempted now..."))
-        print(self.colored(f"[[END]]... Path: {encoded_url}\n... Target: {target}\n... Text: {text}\n... Options: {options}[[END]]"))
+        # print(self.colored(f"[[END]]... Path: {encoded_url}\n... Target: {target}\n... Text: {text}\n... Options: {options}[[END]]"))
 
         # Establish asynchronous connection to API and determine states.
         error = get(url = encoded_url)
@@ -138,6 +138,8 @@ class DeepLAPI:
         if error:
             return loads(error.content)
         else:
+            print(self.colored(f"[[END]]... Translation handshake successful."))
+
             data = get(url = encoded_url)
             return loads(data.content)
 
@@ -161,5 +163,7 @@ class DeepLAPI:
         if error:
             return loads(error.content)
         else:
+            print(self.colored(f"[[END]]... Translation handshake successful."))
+
             data = get(url = encoded_url)
             return loads(data.content)

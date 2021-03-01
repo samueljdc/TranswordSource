@@ -43,6 +43,10 @@
         {
           "name": "Where can I contact for support?",
           "value": "Please reach out to us on our [Discord Server here](https://discord.gg/4n7WRHp86P) if you have any questions, concerns, problems or feedback. Your voice is important to us in order to provide a more qualitative experience for everyone."
+        },
+        {
+          "name": "Do you have more information about this bot?",
+          "value": "Of course! If you would like to see what this bot is all about in further detail, then please check out our [official website](https://transword.xyz) link here. All feedback is generously appreciated."
         }
       ],
       "footer": {

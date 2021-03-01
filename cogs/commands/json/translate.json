@@ -91,43 +91,22 @@
       }
     ]
   },
-  "embeds": [
-    {
-      "title": "Translation",
-      "color": 7506394,
-      "thumbnail": {
-        "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+  "embed": {
+    "title": "Translation",
+    "color": 7506394,
+    "fields": [
+      {
+        "name": "Target Language",
+        "value": "Translated Content",
+        "inline": "True"
       },
-      "fields": [
-        {
-          "name": "Target Language",
-          "value": "Translated Content",
-          "inline": "True"
-        },
-        {
-          "name": "Source Language",
-          "value": "Original Content",
-          "inline": "True"
-        }
-      ],
-      "footer": {
-        "text": "This bot utilizes the DeepL API!",
-        "icon_url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+      {
+        "name": "Source Language",
+        "value": "Original Content",
+        "inline": "True"
       }
-    },
-    {
-      "title": "Error",
-      "description": "The bot encountered an error when trying to handle your translation request.",
-      "color": 7506394,
-      "fields": [
-        {
-          "name": "Error Message",
-          "value": "API Error",
-          "inline": "True"
-        }
-      ]
-    }
-  ],
+    ]
+  },
   "help": {
     "title": "Help",
     "color": 7506394,

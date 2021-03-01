@@ -8,6 +8,8 @@ from discord_slash import SlashCommand
 from datetime import datetime
 from colorama import Fore, Back, Style, init, ansi
 from os import system
+from string import ascii_letters
+from random import choice
 
 class Transword:
     """ Setup the bot information here. """
@@ -23,7 +25,7 @@ class Transword:
         # Define the bot variables.
         self.bot = commands.Bot(
             intents = Intents.all(),
-            command_prefix = "prefix",
+            command_prefix = "".join(choice(ascii_letters) for _n in range(12)),
             help_command = None
         )
         self.slash = SlashCommand(
@@ -31,7 +33,7 @@ class Transword:
             override_type = True,
             sync_commands = True
         )
-        self.cogs = ["Utils", "Translation", "SlashAPI"]
+        self.cogs = ["Utils", "Translation", "SlashAPI", "TopAPI"]
 
         print("""  ______                                              __
  /_  __/________ _____  ______      ______  _________/ /
