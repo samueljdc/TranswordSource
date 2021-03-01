@@ -123,7 +123,7 @@
       },
       {
         "name": "Description",
-        "value": "The `/translate` command translates text from a foreign language into another one specified.\nThis command comes with two required arguments:\n\n> `target` - The language you are trying to translate into.\n> `text` - The contents that you are translating.\n(Usage: `/translate target: DE text: Hello World!`)\n\nAdditionally, the command also comes with two optional arguments:\n\n> `formality` - How formal you want your translation to be.\n> `format` - Formats your message into a specific structure.\n(Usage: `/translate target: FR text: Hello, I enjoy eating croissants and baguettes from France. formality: Informal format: Continuous sentence.`)",
+        "value": "The `/translate` command translates text from a foreign language into another one specified.\nThis command comes with two required arguments:\n\n> `target` - The language you are trying to translate into.\n> `text` - The contents that you are translating.\n(Usage: `/translate target: DE text: Hello World!`)\n\nAdditionally, the command also comes with two optional arguments:\n\n> `formality` - How formal you want your translation to be.\n> `format` - Formats your message into a specific structure.",
         "inline": "False"
       }
     ]

@@ -105,7 +105,6 @@ async def on_ready():
         )
     )
 
-
 transword.bot.run(
     open(".TOKEN", "r").read(),
     bot = True,
