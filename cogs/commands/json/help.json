@@ -18,8 +18,12 @@
             "value": "ping"
           },
           {
-            "name": "Translation",
+            "name": "Manual Translation",
             "value": "translate"
+          },
+          {
+            "name": "Automatic Translation",
+            "value": "transauto"
           },
           {
             "name": "Translation Statistics",
@@ -43,7 +47,7 @@
     "fields": [
       {
         "name": "Utilities",
-        "value": "**/help**\n**/ping**\n**/about**\n**/vote**",
+        "value": "**/help**\n**/ping**\n**/about**\n**/vote**\n**/news**",
         "inline": "True"
       },
       {

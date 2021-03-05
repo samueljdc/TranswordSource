@@ -1,0 +1,35 @@
+{
+  "decorator": {
+    "name": "news",
+    "description": "Hands out an embed of information about the bot's recent changelog."
+  },
+  "embed": {
+    "title": "News",
+    "color": 7506394,
+    "thumbnail": {
+      "url": "https://cdn.discordapp.com/avatars/799697654279307314/2032ca4bbfe5f83bffc5236358557e85.png"
+    },
+    "fields": []
+  },
+  "help": {
+    "title": "Help",
+    "color": 7506394,
+    "fields": [
+      {
+        "name": "Command Name",
+        "value": "`/news`",
+        "inline": "True"
+      },
+      {
+        "name": "Command Type",
+        "value": "Utilities",
+        "inline": "True"
+      },
+      {
+        "name": "Description",
+        "value": "The `/news` command hands out an embed of information about the bot's recent changelog. This command is typed as it's shown.",
+        "inline": "False"
+      }
+    ]
+  }
+}

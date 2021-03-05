@@ -11,46 +11,67 @@
         "required": "True",
         "choices": [
           {
-            "name": "German (DE)",
+            "name": "DE - German",
             "value": "DE"
           },
           {
-            "name": "English (EN)",
+            "name": "EN - English",
             "value": "EN"
           },
           {
-            "name": "French (FR)",
+            "name": "FR - French",
             "value": "FR"
           },
           {
-            "name": "Italian (IT)",
+            "name": "IT - Italian",
             "value": "IT"
           },
           {
-            "name": "Japanese (JA)",
+            "name": "JA - Japanese",
             "value": "JA"
           },
           {
-            "name": "Spanish (ES)",
+            "name": "ES - Spanish",
             "value": "ES"
           },
           {
-            "name": "Polish (PL)",
+            "name": "PL - Polish",
             "value": "PL"
           },
           {
-            "name": "Portuguese (PT)",
+            "name": "PT - Portuguese",
             "value": "PT"
           },
           {
-            "name": "Russian (RU)",
+            "name": "RU - Russian",
             "value": "RU"
           },
           {
-            "name": "Chinese (ZH)",
+            "name": "ZH - Chinese",
             "value": "ZH"
           }
         ]
+      }
+    ]
+  },
+  "help": {
+    "title": "Help",
+    "color": 7506394,
+    "fields": [
+      {
+        "name": "Command Name",
+        "value": "`/transauto`",
+        "inline": "True"
+      },
+      {
+        "name": "Command Type",
+        "value": "Translation",
+        "inline": "True"
+      },
+      {
+        "name": "Description",
+        "value": "The `/transauto` command automatically translates foreign language text into another one specified.\nThis command comes with one required argument:\n\n> `target` - The language you are trying to translate into.\n\nUpon declaration, the command will then act as a toggle state for turning the automatic translation on and off. A role will either be created or distributed to the said user who uses this command, following the naming convention of 'auto`LANG`' as shown.\nWhen a message is seen by the bot with a user having the specific language role of their choice, their original message will be deleted and a webhook is created to 'imitate' the presence of the user in terms of appearance by avatar and username.\n\nIn the future, this command is also planned to have some optional arguments, however, we have had to drop them for now due to API-related problems.",
+        "inline": "False"
       }
     ]
   }

@@ -10,43 +10,43 @@
         "required": "True",
         "choices": [
           {
-            "name": "German (DE)",
+            "name": "DE - German",
             "value": "DE"
           },
           {
-            "name": "English (EN)",
+            "name": "EN - English",
             "value": "EN"
           },
           {
-            "name": "French (FR)",
+            "name": "FR - French",
             "value": "FR"
           },
           {
-            "name": "Italian (IT)",
+            "name": "IT - Italian",
             "value": "IT"
           },
           {
-            "name": "Japanese (JA)",
+            "name": "JA - Japanese",
             "value": "JA"
           },
           {
-            "name": "Spanish (ES)",
+            "name": "ES - Spanish",
             "value": "ES"
           },
           {
-            "name": "Polish (PL)",
+            "name": "PL - Polish",
             "value": "PL"
           },
           {
-            "name": "Portuguese (PT)",
+            "name": "PT - Portuguese",
             "value": "PT"
           },
           {
-            "name": "Russian (RU)",
+            "name": "RU - Russian",
             "value": "RU"
           },
           {
-            "name": "Chinese (ZH)",
+            "name": "ZH - Chinese",
             "value": "ZH"
           }
         ]

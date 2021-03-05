@@ -1,6 +1,6 @@
 # 3rd party libraries
 import requests
-from discord import Embed, Webhook, RequestsWebhookAdapter
+from discord import Embed
 from discord.ext.commands import Cog
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
@@ -90,6 +90,17 @@ class Utils(Cog):
 
                 if current != previous:
                     await msg.edit(embed = embeds[current])
+
+    @cog_slash(**SAPI.read("news")["decorator"])
+    async def _news(self, ctx: SlashContext):
+        """ Hands out an embed of information about the bot's recent changelog. """
+
+        # Invoke a response to clean the inputs.
+        await ctx.respond(eat = True)
+        await ctx.send(
+            content = "Coming soon!",
+            hidden = True
+        )
 
     @cog_slash(**SAPI.read("vote")["decorator"])
     async def _vote(self, ctx: SlashContext):

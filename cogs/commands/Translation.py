@@ -111,7 +111,7 @@ class Translation(Cog):
 
         # Check for if the webhook is in the server.
         async def check(name):
-            webhooks = await self.bot.get_guild(message.guild.id).webhooks()
+            webhooks = await message.guild.webhooks()
 
             for hook in webhooks:
                 if hook.name == name:
@@ -168,8 +168,8 @@ class Translation(Cog):
                     }
 
                     await hook.send(
-                        f":{flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`: {translation['text']}\n" +
-                        f":{flags[target]}: `{target}`",
+                        f":{flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`: {message.content}\n" +
+                        f":{flags[target]}: `{target}`: {translation['text']}",
                         username = message.author.name,
                         avatar_url = message.author.avatar_url
                     )
@@ -186,13 +186,12 @@ class Translation(Cog):
             "name": f"auto{target}",
             "give": True
         }
-        automatic["role"] = get(ctx.guild.roles, name = automatic["name"])
 
         # Check for if the role is in the server.
         async def check(role):
             roles = await ctx.guild.fetch_roles()
             result = False
-            result = True in (_role.name != role for _role in roles)
+            result = True in (_role.name == role for _role in roles)
 
             return result
 
@@ -201,11 +200,12 @@ class Translation(Cog):
             for _role in ctx.author.roles:
                 if _role.name == automatic["name"]:
                     automatic["give"] = False
-                    break
         else:
             await ctx.guild.create_role(name = automatic["name"])
 
         # Now handle the addition/removal of the role.
+        automatic["role"] = get(ctx.guild.roles, name = automatic["name"])
+
         if automatic["give"]:
             await ctx.author.add_roles(automatic["role"])
             await ctx.send(
