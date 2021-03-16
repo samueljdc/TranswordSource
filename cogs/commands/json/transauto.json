@@ -1,6 +1,6 @@
 {
   "decorator": {
-    "name": "transauto",
+    "name": "trla",
     "description": "Automatically translates foreign language text into another one specified.",
     "guild_ids": [799685484313968670],
     "options": [
@@ -60,7 +60,7 @@
     "fields": [
       {
         "name": "Command Name",
-        "value": "`/transauto`",
+        "value": "`/trla`",
         "inline": "True"
       },
       {
@@ -70,7 +70,7 @@
       },
       {
         "name": "Description",
-        "value": "The `/transauto` command automatically translates foreign language text into another one specified.\nThis command comes with one required argument:\n\n> `target` - The language you are trying to translate into.\n\nUpon declaration, the command will then act as a toggle state for turning the automatic translation on and off. A role will either be created or distributed to the said user who uses this command, following the naming convention of 'auto`LANG`' as shown.\nWhen a message is seen by the bot with a user having the specific language role of their choice, their original message will be deleted and a webhook is created to 'imitate' the presence of the user in terms of appearance by avatar and username.\n\nIn the future, this command is also planned to have some optional arguments, however, we have had to drop them for now due to API-related problems.",
+        "value": "The `/trla` command automatically translates foreign language text into another one specified.\nThis command comes with one required argument:\n\n> `target` - The language you are trying to translate into.\n\nUpon declaration, the command will then act as a toggle state for turning the automatic translation on and off. A role will either be created or distributed to the said user who uses this command, following the naming convention of 'auto`LANG`' as shown.\nWhen a message is seen by the bot with a user having the specific language role of their choice, their original message will be deleted and a webhook is created to 'imitate' the presence of the user in terms of appearance by avatar and username.\n\nIn the future, this command is also planned to have some optional arguments, however, we have had to drop them for now due to API-related problems.",
         "inline": "False"
       }
     ]

@@ -52,7 +52,7 @@
       },
       {
         "name": "Translation",
-        "value": "**/translate**\n**/transauto**\n**/stats**",
+        "value": "**/trl**\n**/trla**\n**/stats**",
         "inline": "True"
       },
       {

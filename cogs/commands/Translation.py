@@ -1,5 +1,5 @@
 # 3rd party libraries
-from discord import Embed, Member
+from discord import Embed, Member, errors
 from discord.utils import get
 from discord.ext.commands import Cog
 from discord_slash import SlashCommand, SlashContext
@@ -22,54 +22,54 @@ class Translation(Cog):
         self.key = open(".AUTHKEY", "r").read()
 
     @cog_slash(**SAPI.read("translate")["decorator"])
-    async def _translate(self,
-                         ctx: SlashContext,
-                         target: str,
-                         text: str,
-                         formality: str = "",
-                         format: str = ""):
+    async def _trl(self,
+                   ctx: SlashContext,
+                   target: str,
+                   text: str,
+                   formality: str = "",
+                   format: str = ""):
         """ Translates text from a foreign language into another one specified. """
 
-        # Check if any optional arguments were passed.
-        options = [["preserve_formatting", "0"]]
+        try:
+            # Check if any optional arguments were passed.
+            options = [["preserve_formatting", "0"]]
 
-        # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
+            # Invoke a response to clean the inputs.
+            await ctx.respond(eat = True)
 
-        if formality != "":
-            if target in ["EN", "EN-GB", "EN-US",
-                          "ES", "JA", "ZH"]:
+            if formality != "":
+                if target in ["EN", "EN-GB", "EN-US",
+                              "ES", "JA", "ZH"]:
+                    await ctx.send(
+                        content = f"Sorry {ctx.author.mention}, but `{target}` is not a supported language for formal formatting!\n(Formality argument has been ignored.)",
+                        hidden = True
+                    )
+                else:
+                    options.append(["formality", formality])
+            if format != "":
+                options.append(["split_sentences", format])
+
+            # Define the rules of how our translation can begin.
+            translation = {
+                "chars": len(text),
+                "limit": 200,
+                "patron": {"isPlus": False, "isPremium": False}
+            }
+
+            # Check if the person is within their character limits.
+            if translation["chars"] <= translation["limit"]:
+                translation = DAPI(self.key).translate(
+                    text = text,
+                    target = target,
+                    types = options
+                )["translations"][0]
+            else:
                 await ctx.send(
-                    content = f"Sorry {ctx.author.mention}, but `{target}` is not a supported language for formal formatting!\n(Formality argument has been ignored.)",
+                    content = f"Sorry {ctx.author.mention}, but your message exceeds the `{translation['limit']}` character limit with a total of `{translation['chars']}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
                     hidden = True
                 )
-            else:
-                options.append(["formality", formality])
-        if format != "":
-            options.append(["split_sentences", format])
+                translation = False
 
-        # Define the rules of how our translation can begin.
-        translation = {
-            "chars": len(text),
-            "limit": 200,
-            "patron": {"isPlus": False, "isPremium": False}
-        }
-
-        # Check if the person is within their character limits.
-        if translation["chars"] <= translation["limit"]:
-            translation = DAPI(self.key).translate(
-                text = text,
-                target = target,
-                types = options
-            )["translations"][0]
-        else:
-            await ctx.send(
-                content = f"Sorry {ctx.author.mention}, but your message exceeds the `{translation['limit']}` character limit with a total of `{translation['chars']}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
-                hidden = True
-            )
-            translation = False
-
-        try:
             if translation:
                 # Set a flag table for the appropriate flags.
                 flags = {
@@ -126,9 +126,12 @@ class Translation(Cog):
                 if "auto" in role.name:
                     return get(member.roles, name = role.name)
 
-        # Allow the bot to "imitate" the user profile.
-        role = retrieve()
-        exists = await check("Transword")
+        try:
+            # Allow the bot to "imitate" the user profile.
+            role = retrieve()
+            exists = await check("Transword")
+        except errors.Forbidden as error:
+            return
 
         if role:
             # Set up the base details.
@@ -176,9 +179,9 @@ class Translation(Cog):
                     await message.delete()
 
     @cog_slash(**SAPI.read("transauto")["decorator"])
-    async def _transauto(self,
-                         ctx: SlashContext,
-                         target: str):
+    async def _trla(self,
+                    ctx: SlashContext,
+                    target: str):
         """ Automatically translates foreign language text into another one specified. """
 
         # Define automatic translation role logic.

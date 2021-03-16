@@ -1,6 +1,6 @@
 {
   "decorator": {
-    "name": "translate",
+    "name": "trl",
     "description": "Translates text from a foreign language into another one specified.",
     "options": [
       {
@@ -113,7 +113,7 @@
     "fields": [
       {
         "name": "Command Name",
-        "value": "`/translate`",
+        "value": "`/trl`",
         "inline": "True"
       },
       {
@@ -123,7 +123,7 @@
       },
       {
         "name": "Description",
-        "value": "The `/translate` command translates text from a foreign language into another one specified.\nThis command comes with two required arguments:\n\n> `target` - The language you are trying to translate into.\n> `text` - The contents that you are translating.\n(Usage: `/translate target: DE text: Hello World!`)\n\nAdditionally, the command also comes with two optional arguments:\n\n> `formality` - How formal you want your translation to be.\n> `format` - Formats your message into a specific structure.",
+        "value": "The `/trl` command translates text from a foreign language into another one specified.\nThis command comes with two required arguments:\n\n> `target` - The language you are trying to translate into.\n> `text` - The contents that you are translating.\n(Usage: `/translate target: DE text: Hello World!`)\n\nAdditionally, the command also comes with two optional arguments:\n\n> `formality` - How formal you want your translation to be.\n> `format` - Formats your message into a specific structure.",
         "inline": "False"
       }
     ]
