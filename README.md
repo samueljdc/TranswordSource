@@ -7,5 +7,5 @@
 <hr/>
 
 <div align="center">
-  Learn more about Transword <a href="https://transword.xyz"> from our website here. </a>
+  Learn more about Transword from our website<a href="https://transword.xyz"> here. </a>
 </div>
