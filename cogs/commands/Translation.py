@@ -27,7 +27,7 @@ class Translation(Cog):
                    target: str,
                    text: str,
                    formality: str = "",
-                   format: str = ""):
+                   format: str = "") -> None:
         """ Translates text from a foreign language into another one specified. """
 
         try:
@@ -71,25 +71,10 @@ class Translation(Cog):
                 translation = False
 
             if translation:
-                # Set a flag table for the appropriate flags.
-                flags = {
-                    "DE": "flag_de",
-                    "EN": "flag_us",
-                    "FR": "flag_fr",
-                    "IT": "flag_it",
-                    "JA": "flag_jp",
-                    "ES": "flag_es",
-                    "NL": "flag_nl",
-                    "PL": "flag_pl",
-                    "PT": "flag_pt",
-                    "RU": "flag_ru",
-                    "ZH": "flag_cn"
-                }
-
                 # Pull the embed and make some modifications.
                 embed = Embed.from_dict(SAPI.read("translate")["embed"])
-                embed.set_field_at(0, name = f":{flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`",   value = text,                   inline = True)
-                embed.set_field_at(1, name = f":{flags[target]}: `{target}`",                                                                     value = translation["text"],    inline = True)
+                embed.set_field_at(0, name = f":{DAPI.flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`",   value = text,                   inline = True)
+                embed.set_field_at(1, name = f":{DAPI.flags[target]}: `{target}`",                                                                     value = translation["text"],    inline = True)
                 embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
                 await ctx.send(embeds = [embed])
@@ -98,7 +83,7 @@ class Translation(Cog):
 
     @Cog.listener()
     async def on_message(self,
-                         message):
+                         message) -> None:
         """ Handle our automatic translations for those with the role(s). """
 
         # Define the rules of how our translation can begin.
@@ -155,8 +140,8 @@ class Translation(Cog):
 
                 # Finally send it off.
                 if translation:
-                    # Set a flag table for the appropriate flags.
-                    flags = {
+                    # Set a flag table for the appropriate DAPI.flags.
+                    DAPI.flags = {
                         "DE": "flag_de",
                         "EN": "flag_us",
                         "FR": "flag_fr",
@@ -171,8 +156,8 @@ class Translation(Cog):
                     }
 
                     await hook.send(
-                        f":{flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`: {message.content}\n" +
-                        f":{flags[target]}: `{target}`: {translation['text']}",
+                        f":{DAPI.flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`: {message.content}\n" +
+                        f":{DAPI.flags[target]}: `{target}`: {translation['text']}",
                         username = message.author.name,
                         avatar_url = message.author.avatar_url
                     )
@@ -181,7 +166,7 @@ class Translation(Cog):
     @cog_slash(**SAPI.read("transauto")["decorator"])
     async def _trla(self,
                     ctx: SlashContext,
-                    target: str):
+                    target: str) -> None:
         """ Automatically translates foreign language text into another one specified. """
 
         # Define automatic translation role logic.
@@ -224,7 +209,7 @@ class Translation(Cog):
 
     @cog_slash(**SAPI.read("stats")["decorator"])
     async def _stats(self,
-                     ctx: SlashContext):
+                     ctx: SlashContext) -> None:
         """ Provides a list of statistics for the bot's usage. """
 
         # Collect information about our usages through the DeepL API.

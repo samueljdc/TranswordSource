@@ -1,6 +1,6 @@
 # 3rd party libraries
 import requests
-from discord import Embed
+from discord import Embed, TextChannel
 from discord.ext.commands import Cog
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
@@ -17,7 +17,9 @@ class Utils(Cog):
         self.bot = bot
 
     @cog_slash(**SAPI.read("help")["decorator"])
-    async def _help(self, ctx: SlashContext, name: str = None):
+    async def _help(self,
+                    ctx: SlashContext,
+                    name: str = None) -> None:
         """ Returns an embed showing the bot's commands. """
 
         # Invoke a response to clean the inputs.
@@ -32,7 +34,8 @@ class Utils(Cog):
             await ctx.send(embeds = [embed])
 
     @cog_slash(**SAPI.read("ping")["decorator"])
-    async def _ping(self, ctx: SlashContext):
+    async def _ping(self,
+                    ctx: SlashContext) -> None:
         """ Returns the bot's latency as milliseconds. """
 
         # Get the latency from micro and bring to milli with roundup.
@@ -46,7 +49,8 @@ class Utils(Cog):
         )
 
     @cog_slash(**SAPI.read("about")["decorator"])
-    async def _about(self, ctx: SlashContext):
+    async def _about(self,
+                     ctx: SlashContext) -> None:
         """ Provides an embed showing information about the bot. """
 
         # Set up the structure of the command.
@@ -91,19 +95,20 @@ class Utils(Cog):
                 if current != previous:
                     await msg.edit(embed = embeds[current])
 
-    @cog_slash(**SAPI.read("news")["decorator"])
-    async def _news(self, ctx: SlashContext):
-        """ Hands out an embed of information about the bot's recent changelog. """
+    @cog_slash(**SAPI.read("subscribe")["decorator"])
+    async def _subscribe(self,
+                         ctx: SlashContext,
+                         channel: TextChannel) -> None:
+        """ Sets up an announcement channel for bot updates to be posted in. """
 
-        # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
-        await ctx.send(
-            content = "Coming soon!",
-            hidden = True
-        )
+        # Make sure that they have the permission to do this.
+        for perm in ctx.author.permissions:
+            if perm.manage_channels:
+                return
 
     @cog_slash(**SAPI.read("vote")["decorator"])
-    async def _vote(self, ctx: SlashContext):
+    async def _vote(self,
+                    ctx: SlashContext) -> None:
         """ Provides a website link to vote for Transword's reputability. """
 
         # Set up the link for the bot voting page.

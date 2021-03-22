@@ -1,0 +1,35 @@
+{
+  "decorator": {
+    "name": "subscribe",
+    "description": "Sets up an announcement channel for bot updates to be posted in.",
+    "options": [
+      {
+        "name": "channel",
+        "description": "The channel you would like to subscribe updates to.",
+        "type": 7,
+        "required": "True"
+      }
+    ]
+  },
+  "help": {
+    "title": "Help",
+    "color": 7506394,
+    "fields": [
+      {
+        "name": "Command Name",
+        "value": "`/subscribe`",
+        "inline": "True"
+      },
+      {
+        "name": "Command Type",
+        "value": "Utilities",
+        "inline": "True"
+      },
+      {
+        "name": "Description",
+        "value": "The `/subscribe` command hands out an embed of information about the bot's recent changelog. This command is typed as it's shown.",
+        "inline": "False"
+      }
+    ]
+  }
+}
