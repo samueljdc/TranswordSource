@@ -45,21 +45,6 @@ class DeepLAPI:
             "formality": ["default", "more", "less"]
         }
 
-        # Set a flag table for the appropriate flags.
-        self.flags = {
-            "DE": "flag_de",
-            "EN": "flag_us",
-            "FR": "flag_fr",
-            "IT": "flag_it",
-            "JA": "flag_jp",
-            "ES": "flag_es",
-            "NL": "flag_nl",
-            "PL": "flag_pl",
-            "PT": "flag_pt",
-            "RU": "flag_ru",
-            "ZH": "flag_cn"
-        }
-
     def colored(self,
                 text: str):
         """

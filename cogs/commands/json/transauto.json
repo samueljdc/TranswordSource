@@ -2,7 +2,6 @@
   "decorator": {
     "name": "trla",
     "description": "Automatically translates foreign language text into another one specified.",
-    "guild_ids": [799685484313968670],
     "options": [
       {
         "name": "target",
@@ -49,6 +48,54 @@
           {
             "name": "ZH - Chinese",
             "value": "ZH"
+          },
+          {
+            "name": "BG - Bulgarian",
+            "value": "BG"
+          },
+          {
+            "name": "CS - Czech",
+            "value": "CS"
+          },
+          {
+            "name": "DA - Danish",
+            "value": "DA"
+          },
+          {
+            "name": "ET - Estonian",
+            "value": "ET"
+          },
+          {
+            "name": "FI - Finnish",
+            "value": "FI"
+          },
+          {
+            "name": "HU - Hungarian",
+            "value": "HU"
+          },
+          {
+            "name": "LT - Lithuanian",
+            "value": "LT"
+          },
+          {
+            "name": "LV - Latvian",
+            "value": "LV"
+          },
+          {
+            "name": "RO - Romanian",
+            "value": "RO"
+          },
+          {
+            "name": "SK - Slovak",
+            "value": "SK"
+          },
+          {
+            "name": "SL - Slovenian",
+            "value": "SL"
+          },
+          {
+            "name": "SV - Swedish",
+            "value": "SV"
           }
         ]
       }

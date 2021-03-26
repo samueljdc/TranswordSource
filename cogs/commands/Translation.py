@@ -6,6 +6,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.cog_ext import cog_slash
 from asyncio import get_event_loop
 from math import floor
+from tinydb import TinyDB, Query
 
 # Local libraries
 from ..api.SlashAPI import SlashAPI as SAPI
@@ -21,6 +22,24 @@ class Translation(Cog):
         # Define the DeepL API access.
         self.key = open(".AUTHKEY", "r").read()
 
+        # Set a flag table for the appropriate flags.
+        self.flags = {
+            "DE": "🇩🇪",
+            "EN": "🇺🇸",
+            "FR": "🇫🇷",
+            "IT": "🇮🇹",
+            "JA": "🇯🇵",
+            "ES": "🇪🇸",
+            "NL": "🇳🇱",
+            "PL": "🇵🇱",
+            "PT": "🇵🇹",
+            "RU": "🇷🇺",
+            "ZH": "🇨🇳"
+        }
+
+        # user = TinyDB(f"database/users/INSERT ID.json")
+        # user.insert({"developer": 0, "plus": 0, "premium": 1})
+
     @cog_slash(**SAPI.read("translate")["decorator"])
     async def _trl(self,
                    ctx: SlashContext,
@@ -31,8 +50,18 @@ class Translation(Cog):
         """ Translates text from a foreign language into another one specified. """
 
         try:
-            # Check if any optional arguments were passed.
+            # Define our main variables.
             options = [["preserve_formatting", "0"]]
+            data = TinyDB(f"database/users/{ctx.author.id}.json").all()[0]
+            translation = {"chars": len(text)}
+
+            # Determine our Patreon character limits.
+            if data["plus"]:
+                translation["limit"] = 500
+            elif data["premium"]:
+                translation["limit"] = 1000
+            else:
+                translation["limit"] = 200
 
             # Invoke a response to clean the inputs.
             await ctx.respond(eat = True)
@@ -49,13 +78,6 @@ class Translation(Cog):
             if format != "":
                 options.append(["split_sentences", format])
 
-            # Define the rules of how our translation can begin.
-            translation = {
-                "chars": len(text),
-                "limit": 200,
-                "patron": {"isPlus": False, "isPremium": False}
-            }
-
             # Check if the person is within their character limits.
             if translation["chars"] <= translation["limit"]:
                 translation = DAPI(self.key).translate(
@@ -63,6 +85,9 @@ class Translation(Cog):
                     target = target,
                     types = options
                 )["translations"][0]
+                translation["developer"] = "<:developer:824628890593001472>" if data["developer"] else ""
+                translation["isPlus"] = "<:plus:805812030564597780>" if data["plus"] else ""
+                translation["isPremium"] = "<:premium:805812049320869888>" if data["premium"] else ""
             else:
                 await ctx.send(
                     content = f"Sorry {ctx.author.mention}, but your message exceeds the `{translation['limit']}` character limit with a total of `{translation['chars']}` characters!\nIn order to receive more character usage, please consider checking out our [Patreon tiers](https://www.patreon.com/transword) here.",
@@ -72,9 +97,17 @@ class Translation(Cog):
 
             if translation:
                 # Pull the embed and make some modifications.
-                embed = Embed.from_dict(SAPI.read("translate")["embed"])
-                embed.set_field_at(0, name = f":{DAPI.flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`",   value = text,                   inline = True)
-                embed.set_field_at(1, name = f":{DAPI.flags[target]}: `{target}`",                                                                     value = translation["text"],    inline = True)
+                embed = Embed(title = f"Translation {translation['developer']} {translation['isPlus']} {translation['isPremium']}", color = 0x7289DA)
+                embed.add_field(
+                    name = f"{self.flags[translation['detected_source_language']]} `{translation['detected_source_language']}`",
+                    value = text,
+                    inline = True
+                )
+                embed.add_field(
+                    name = f"{self.flags[target]} `{target}`",
+                    value = translation["text"],
+                    inline = True
+                )
                 embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
                 await ctx.send(embeds = [embed])
@@ -88,11 +121,16 @@ class Translation(Cog):
 
         # Define the rules of how our translation can begin.
         options = [["preserve_formatting", "0"]]
-        translation = {
-            "chars": len(message.content),
-            "limit": 200,
-            "patron": {"isPlus": False, "isPremium": False}
-        }
+        data = TinyDB(f"database/users/{ctx.author.id}.json").all()[0]
+        translation = {"chars": len(text)}
+
+        # Determine our Patreon character limits.
+        if data["plus"]:
+            translation["limit"] = 500
+        elif data["premium"]:
+            translation["limit"] = 1000
+        else:
+            translation["limit"] = 200
 
         # Check for if the webhook is in the server.
         async def check(name):
@@ -113,9 +151,13 @@ class Translation(Cog):
 
         try:
             # Allow the bot to "imitate" the user profile.
-            role = retrieve()
+            try:
+                role = retrieve()
+            except:
+                return
+
             exists = await check("Transword")
-        except errors.Forbidden as error:
+        except:
             return
 
         if role:
@@ -140,28 +182,50 @@ class Translation(Cog):
 
                 # Finally send it off.
                 if translation:
-                    # Set a flag table for the appropriate DAPI.flags.
-                    DAPI.flags = {
-                        "DE": "flag_de",
-                        "EN": "flag_us",
-                        "FR": "flag_fr",
-                        "IT": "flag_it",
-                        "JA": "flag_jp",
-                        "ES": "flag_es",
-                        "NL": "flag_nl",
-                        "PL": "flag_pl",
-                        "PT": "flag_pt",
-                        "RU": "flag_ru",
-                        "ZH": "flag_cn"
-                    }
-
                     await hook.send(
-                        f":{DAPI.flags[translation['detected_source_language']]}: `{translation['detected_source_language']}`: {message.content}\n" +
-                        f":{DAPI.flags[target]}: `{target}`: {translation['text']}",
+                        f"{self.flags[translation['detected_source_language']]} `{translation['detected_source_language']}`: {message.content}\n" +
+                        f"{self.flags[target]} `{target}`: {translation['text']}",
                         username = message.author.name,
                         avatar_url = message.author.avatar_url
                     )
                     await message.delete()
+
+    @Cog.listener()
+    async def on_reaction_add(self,
+                              reaction,
+                              user) -> None:
+        """ Handle the logic for reaction translations. """
+
+        # Define the rules of how our translation can begin.
+        options = [["preserve_formatting", "0"]]
+        data = TinyDB(f"database/users/{ctx.author.id}.json").all()[0]
+        translation = {"chars": len(text)}
+
+        # Determine our Patreon character limits.
+        if data["plus"]:
+            translation["limit"] = 500
+        elif data["premium"]:
+            translation["limit"] = 1000
+        else:
+            translation["limit"] = 200
+
+        for flag in self.flags:
+            if reaction.emoji == self.flags[flag]:
+                # Check if the person is within their character limits.
+                if translation["chars"] <= translation["limit"]:
+                    translation = DAPI(self.key).translate(
+                        text = reaction.message.content,
+                        target = flag,
+                        types = options
+                    )["translations"][0]
+                else:
+                    translation = False
+
+                # Finally send it off.
+                if translation:
+                    await reaction.message.channel.send(
+                        content = f"{self.flags[flag]} `{flag}`: {translation['text']}"
+                    )
 
     @cog_slash(**SAPI.read("transauto")["decorator"])
     async def _trla(self,
@@ -213,21 +277,29 @@ class Translation(Cog):
         """ Provides a list of statistics for the bot's usage. """
 
         # Collect information about our usages through the DeepL API.
+        data = TinyDB(f"database/users/{ctx.author.id}.json").all()[0]
+
         translation = DAPI(self.key).usage()
+        translation["developer"] = "<:developer:824628890593001472>" if data["developer"] else ""
+        translation["isPlus"] = "<:plus:805812030564597780>" if data["plus"] else ""
+        translation["isPremium"] = "<:premium:805812049320869888>" if data["premium"] else ""
+
+        # Calculate the amount of bars needed for the overall progress.
         progress = floor(
             (translation["character_count"] / translation["character_limit"])
             * 12
         )
 
-        embed = Embed.from_dict(SAPI.read("stats")["embed"])
-        embed.set_field_at(0, name = "Bot Usage",       value = "`" + str(translation["character_count"]) + "`",    inline = True)
-        embed.set_field_at(1, name = "Bot Limit",       value = "`" + str(translation["character_limit"]) + "`",    inline = True)
-        embed.set_field_at(2, name = "Progress Bar",    value = "`[" +
+        # Structure the embed for providing statistics feedback.
+        embed = Embed(title = f"Translation {translation['developer']} {translation['isPlus']} {translation['isPremium']}", color = 0x7289DA)
+        embed.add_field(name = "Bot Usage",       value = "`" + str(translation["character_count"]) + "`",    inline = True)
+        embed.add_field(name = "Bot Limit",       value = "`" + str(translation["character_limit"]) + "`",    inline = True)
+        embed.add_field(name = "Progress Bar",    value = "`[" +
             "".join("=" for _n in range(progress)) +
             "".join(" " for _n in range(12 - progress))
-        + "]`",                                                                                                     inline = True)
-        embed.set_field_at(3, name = "Character Usage", value = "`TBA.`",                                           inline = True)
-        embed.set_field_at(4, name = "Character Limit", value = "`200`",                                            inline = True)
+        + "]`",                                                                                               inline = True)
+        embed.add_field(name = "Character Usage", value = "`TBA.`",                                           inline = True)
+        embed.add_field(name = "Character Limit", value = "`200`",                                            inline = True)
         embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
         # Invoke a response to clean the inputs.
