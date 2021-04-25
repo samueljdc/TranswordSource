@@ -3,6 +3,7 @@ import discord
 from discord import Intents, Status, Activity, ActivityType
 from discord.ext import commands
 from discord_slash import SlashCommand
+from dbl import DBLClient
 
 # Imports additional libraries used.
 from datetime import datetime
@@ -34,6 +35,14 @@ class Transword:
             sync_commands = True
         )
         self.cogs = ["Utils", "Translation", "SlashAPI", "TopAPI"]
+
+        # Define Top.gg parameters.
+        self.token = open(".DBL", "r").read()
+        self.API = DBLClient(
+            self.bot,
+            self.token,
+            post_shard_count = True
+        )
 
         print("""  ______                                              __
  /_  __/________ _____  ______      ______  _________/ /
@@ -103,6 +112,11 @@ async def on_ready():
             name = "for /help",
             type = ActivityType.watching
         )
+    )
+
+    # Send the Top.GG stats.
+    await transword.API.post_guild_count(
+        transword.API.guild_count
     )
 
 transword.bot.run(

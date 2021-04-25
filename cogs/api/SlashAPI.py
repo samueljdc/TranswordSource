@@ -14,7 +14,8 @@ from . import Errors
 class SlashAPI(commands.Cog):
     """ API for handling all of the slash command utilization. """
 
-    def __init__(self, bot):
+    def __init__(self,
+                 bot):
         # Automatically reset the color formatting.
         init(autoreset = True)
 
@@ -101,7 +102,8 @@ class SlashAPI(commands.Cog):
 
         return self.request
 
-    async def get(self, guild_id: int = None) -> list:
+    async def get(self,
+                  guild_id: int = None) -> list:
 
         """
             Get all of the slash commands from the Bot API.
