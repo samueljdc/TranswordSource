@@ -128,10 +128,6 @@ class DeepLAPI:
         # Encode the URI path to be ready for request sending.
         encoded_url = requote_uri(f"{self.HTTP['translate']}&{queries}&target_lang={target.lower()}{options}").replace("%0A", "")
 
-        # Give back some information.
-        print(self.colored(f"[[INFO]][DEEPLAPI][[END]] Translation request is being attempted now..."))
-        print(self.colored(f"[[END]]... Path: {encoded_url}\n... Target: {target}\n... Text: {text}\n... Options: {options}[[END]]"))
-
         # Establish asynchronous connection to API and determine states.
         error = get(url = encoded_url)
 
@@ -152,10 +148,6 @@ class DeepLAPI:
 
         # Encode the URI path to be ready for request sending.
         encoded_url = requote_uri(f"{self.HTTP['usage']}").replace("%0A", "")
-
-        # Give back some information.
-        print(self.colored(f"[[INFO]][DEEPLAPI][[END]] Statistics request is being attempted now..."))
-        print(self.colored(f"[[END]]... Path: {encoded_url}[[END]]"))
 
         # Establish asynchronous connection to API and determine states.
         error = get(url = encoded_url)

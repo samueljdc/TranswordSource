@@ -7,6 +7,7 @@ from discord_slash.cog_ext import cog_slash
 from asyncio import get_event_loop
 from math import floor
 from tinydb import TinyDB, Query
+from os import remove
 
 # Local libraries
 from ..api.SlashAPI import SlashAPI as SAPI
@@ -55,16 +56,21 @@ class Translation(Cog):
             # Define our main variables.
             options = [["preserve_formatting", "0"]]
 
+            # Make sure the user exists in the database.
+            db = TinyDB(f"database/users/{ctx.author.id}.json")
+            db.insert({"developer": 0, "plus": 0, "premium": 0})
+
             try:
-                db = TinyDB(f"database/users/{ctx.author.id}.json")
+                data = db.all()
+
+                if len(data) > 1:
+                    remove(f"database/users/{ctx.author.id}.json")
+                    db = TinyDB(f"database/users/{ctx.author.id}.json")
+                    db.insert({"developer": 0, "plus": 0, "premium": 0})
             except:
                 pass
 
-            try:
-                data = db.all()[0]
-            except:
-                pass
-                
+            data = db.all()[0]
             translation = {"chars": len(text)}
 
             # Determine our Patreon character limits.
@@ -73,14 +79,14 @@ class Translation(Cog):
             if data["premium"]:
                 translation["limit"] = 1000
             else:
-                translation["limit"] = 200
+                translation["limit"] = 350
 
             # Give global exceptions. (under Patreon clause)
             if ctx.guild.id == 775747635017023499:
                 translation["limit"] = 1000
 
             # Invoke a response to clean the inputs.
-            await ctx.respond(eat = True)
+            await ctx.defer()
 
             if formality != "":
                 if target in ["EN", "EN-GB", "EN-US",
@@ -142,8 +148,21 @@ class Translation(Cog):
         try:
             # Define the rules of how our translation can begin.
             options = [["preserve_formatting", "0"]]
+
+            # Make sure the user exists in the database.
             db = TinyDB(f"database/users/{message.author.id}.json")
-            data = db.all()[0]
+            db.insert({"developer": 0, "plus": 0, "premium": 0})
+
+            try:
+                data = db.all()
+
+                if len(data) > 1:
+                    remove(f"database/users/{message.author.id}.json")
+                    db = TinyDB(f"database/users/{message.author.id}.json")
+                    db.insert({"developer": 0, "plus": 0, "premium": 0})
+            except:
+                pass
+
             translation = {"chars": len(message.content)}
 
             # Determine our Patreon character limits.
@@ -152,7 +171,7 @@ class Translation(Cog):
             if data["premium"]:
                 translation["limit"] = 1000
             else:
-                translation["limit"] = 200
+                translation["limit"] = 350
 
             # Give global exceptions. (under Patreon clause)
             if message.guild.id == 775747635017023499:
@@ -227,8 +246,21 @@ class Translation(Cog):
         try:
             # Define the rules of how our translation can begin.
             options = [["preserve_formatting", "0"]]
-            db = TinyDB(f"database/users/{reaction.message.author.id}.json")
-            data = db.all()[0]
+
+            # Make sure the user exists in the database.
+            db = TinyDB(f"database/users/{ctx.author.id}.json")
+            db.insert({"developer": 0, "plus": 0, "premium": 0})
+
+            try:
+                data = db.all()
+
+                if len(data) > 1:
+                    remove(f"database/users/{ctx.author.id}.json")
+                    db = TinyDB(f"database/users/{ctx.author.id}.json")
+                    db.insert({"developer": 0, "plus": 0, "premium": 0})
+            except:
+                pass
+
             translation = {"chars": len(reaction.message.content)}
 
             # Determine our Patreon character limits.
@@ -237,7 +269,7 @@ class Translation(Cog):
             if data["premium"]:
                 translation["limit"] = 1000
             else:
-                translation["limit"] = 200
+                translation["limit"] = 350
 
             # Give global exceptions. (under Patreon clause)
             if reaction.message.guild.id == 775747635017023499:
@@ -318,7 +350,11 @@ class Translation(Cog):
         try:
             # Collect information about our usages through the DeepL API.
             db = TinyDB(f"database/users/{ctx.author.id}.json")
-            data = db.all()[0]
+
+            try:
+                data = db.all()[0]
+            except:
+                pass
 
             translation = DAPI(self.key).usage()
             translation["developer"] = "<:developer:824628890593001472>" if data["developer"] else ""
@@ -344,7 +380,7 @@ class Translation(Cog):
             embed.set_author(name = ctx.author, url = f"https://discord.com/users/{ctx.author.id}", icon_url = ctx.author.avatar_url)
 
             # Invoke a response to clean the inputs.
-            await ctx.respond()
+            await ctx.defer()
             await ctx.send(embeds = [embed])
         except:
             pass

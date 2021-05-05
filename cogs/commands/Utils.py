@@ -23,7 +23,7 @@ class Utils(Cog):
         """ Returns an embed showing the bot's commands. """
 
         # Invoke a response to clean the inputs.
-        await ctx.respond()
+        await ctx.defer()
 
         # Check if we're searching for a specific command name.
         if name in ["", None]:
@@ -42,7 +42,7 @@ class Utils(Cog):
         latency = round(self.bot.latency * 1000)
 
         # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
+        await ctx.defer()
         await ctx.send(
             content = f":ping_pong: Pong! Responded at `{latency}` ms.",
             hidden = True
@@ -115,7 +115,7 @@ class Utils(Cog):
         link = "https://top.gg/bot/799697654279307314/vote"
 
         # Invoke a response to clean the inputs.
-        await ctx.respond(eat = True)
+        await ctx.defer()
         await ctx.send(
             content = f"If you would like to help us give more attention to this bot through the method of advertising, please consider voting for our bot in the link below! Your vote is generously appreciated to help us create a future here for Discord.\n\n{link}",
             hidden = True

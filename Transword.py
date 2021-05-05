@@ -97,7 +97,7 @@ async def on_ready():
         f"[[END]]... Started: [[INFO]]{time}[[END]]",
         f"[[END]]... Server Count: [[INFO]]{servers}[[END]]",
         f"[[END]]... Discord.py Version: [[INFO]]{discord.__version__}[[END]]",
-        f"[[END]]... Slash Version: [[INFO]]1.0.9.4[[END]]"
+        f"[[END]]... Slash Version: [[INFO]]1.1.0.1[[END]]"
     ]
 
     for line in prints:
@@ -115,9 +115,12 @@ async def on_ready():
     )
 
     # Send the Top.GG stats.
-    await transword.API.post_guild_count(
-        transword.API.guild_count
-    )
+    try:
+        await transword.API.post_guild_count(
+            transword.API.guild_count
+        )
+    except TypeError:
+        pass
 
 transword.bot.run(
     open(".TOKEN", "r").read(),
