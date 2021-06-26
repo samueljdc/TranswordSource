@@ -1,9 +1,7 @@
 # Secret bot files
-.TOKEN
-.AUTHKEY
-.DBL
-.gitignore
+access.ini
 requirements.txt
+*.log
 
 # Database
 database/

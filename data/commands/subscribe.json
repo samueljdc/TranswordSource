@@ -1,0 +1,1 @@
+{"name": "subscribe", "description": "Subscribes the bot to future announcements.", "guild_ids": [799685484313968670], "options": [{"name": "channel", "description": "The channel to subscribe under.", "type": 7, "required": true}]}
